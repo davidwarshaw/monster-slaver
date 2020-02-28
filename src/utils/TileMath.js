@@ -101,6 +101,25 @@ function keyFromPoint(point) {
   return `${point.x}-${point.y}`;
 }
 
+function animationKeyFromMove(character, from, to) {
+  const left = from.x - to.x > 0;
+  const right = from.x - to.x < 0;
+  const up = from.y - to.y > 0;
+  const down = from.y - to.y < 0;
+  let direction;
+  if (left || right) {
+    direction = left ? 'left' : 'right';
+  }
+  else if (up || down) {
+    direction = up ? 'up' : 'down';
+  }
+  else {
+    direction = 'down';
+  }
+
+  return `${character.name}_${direction}`;
+}
+
 function collisionMapFromTileMap(tileMap) {
   const collision = tileMap.layers.filter(layer => layer.name === 'collision')[0];
   const collisionMap = {};
@@ -122,5 +141,6 @@ export default {
   distance,
   keyFromXY,
   keyFromPoint,
+  animationKeyFromMove,
   collisionMapFromTileMap
 };

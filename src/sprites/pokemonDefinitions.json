@@ -1,11 +1,14 @@
 {
   "Bulbasaur": {
-    "index": 0
+    "index": 0,
+    "speed": 0
   },
   "Ivysaur": {
-    "index": 1
+    "index": 1,
+    "speed": 1
   },
   "Venusaur": {
-    "index": 2
+    "index": 2,
+    "speed": 1
   }
 }

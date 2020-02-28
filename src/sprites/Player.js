@@ -73,15 +73,5 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     return index + col + row * 4;
   }
 
-  moveTo(path) {
-    this.path = path;
-    this.pathIndex = 0;
-    this.isMoving = true;
-  }
-
-  hasPath() {
-    return this.path && this.pathIndex + 1 < this.path.length;
-  }
-
   update(delta) {}
 }

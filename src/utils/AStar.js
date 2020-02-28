@@ -1,18 +1,16 @@
 import TileMath from './TileMath';
 
 export default class AStar {
-  constructor(map, player) {
+  constructor(map, player, pokeManager) {
     this.map = map;
     this.player = player;
+    this.pokeManager = pokeManager;
   }
 
   addNeighbor(neighbors, x, y) {
-    // if (this.enemySquad) {
-    //   const enemyHere = this.enemySquad.getByXY(x, y);
-    //   if (enemyHere && enemyHere.alive) {
-    //     return;
-    //   }
-    // }
+    if (this.pokeManager.someOnTile(x, y) > 0) {
+      return;
+    }
 
     const collision = this.map[TileMath.keyFromXY(x, y)];
     if (collision) {

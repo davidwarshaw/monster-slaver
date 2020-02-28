@@ -12,6 +12,9 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     this.setPosition(x, y);
 
     this.name = name;
+    this.alive = true;
+    this.definition = pokemonDefinitions[name];
+
     scene.add.existing(this);
 
     scene.anims.create({
