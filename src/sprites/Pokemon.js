@@ -1,6 +1,6 @@
 import properties from '../properties';
 import TileMath from '../utils/TileMath';
-import pokemonDefinitions from './pokemonDefinitions.json';
+import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
 
 export default class Pokemon extends Phaser.GameObjects.Sprite {
   constructor(scene, tile, name) {

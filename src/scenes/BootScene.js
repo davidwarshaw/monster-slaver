@@ -15,6 +15,10 @@ export default class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map-start', 'assets/maps/start.json');
 
     // Sprites
+    this.load.spritesheet('pokeball-small', 'assets/images/pokeball_small.png', {
+      frameWidth: 16,
+      frameHeight: 16
+    });
     this.load.spritesheet('player', 'assets/images/players_spritesheet.png', {
       frameWidth: 32,
       frameHeight: 32,

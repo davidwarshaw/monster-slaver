@@ -2,8 +2,10 @@ import properties from '../properties';
 import TileMath from '../utils/TileMath';
 import AStar from '../utils/AStar';
 
-import InspectWindow from '../sprites/InspectWindow';
-import PokeballWindow from '../sprites/PokeballWindow';
+import InspectWindow from '../ui/InspectWindow';
+import PokeballWindow from '../ui/PokeballWindow';
+
+import Pokeball from '../sprites/Pokeball';
 
 // Turn States
 const CHOOSE_ACTION = 'CHOOSE_ACTION';
@@ -12,6 +14,7 @@ const INSPECT = 'INSPECT';
 const POKEBALL_CHOOSE = 'POKEBALL_CHOOSE';
 const POKEBALL_CHOOSE_WAIT = 'POKEBALL_CHOOSE_WAIT';
 const POKEBALL_THROW = 'POKEBALL_THROW';
+const POKEBALL_THROW_WAIT = 'POKEBALL_THROW_WAIT';
 
 // Turn Types
 const MOVE = 'MOVE';
@@ -60,8 +63,8 @@ export default class BattleSystem {
     switch (this.turnState) {
       case POKEBALL_THROW: {
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
-        console.log(worldPoint);
         const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
+        const world = this.map.tileToWorldXY(toTile.x, toTile.y);
 
         // Throwing at the player cancels the throw
         if (this.player.isOnTile(toTile)) {
@@ -81,8 +84,40 @@ export default class BattleSystem {
           break;
         }
 
-        this.selectedPokemon.iChooseYou(toTile);
-        this.turnState = CHOOSE_ACTION;
+        // Tween the pokeball throw
+        const pokeball = new Pokeball(this.scene, this.player);
+        this.scene.tweens.add({
+          targets: pokeball,
+          scale: 5,
+          duration: properties.throwMillis / 2,
+          yoyo: true
+        });
+        this.scene.tweens.add({
+          targets: pokeball,
+          rotation: Math.PI * 2,
+          duration: properties.throwMillis
+        });
+        this.scene.tweens.add({
+          targets: pokeball,
+          y: world.y + 8,
+          duration: properties.throwMillis
+        });
+        this.scene.tweens.add({
+          targets: pokeball,
+          x: world.x + 8,
+          duration: properties.throwMillis,
+          onComplete: () => {
+            pokeball.play('pokeball_open', false);
+            pokeball.once('animationcomplete', () => {
+              pokeball.destroy();
+            });
+            this.selectedPokemon.iChooseYou(toTile);
+            this.turnState = CHOOSE_ACTION;
+          },
+          onCompleteScope: this
+        });
+
+        this.turnState = POKEBALL_THROW_WAIT;
         break;
       }
       case POKEBALL_CHOOSE: {

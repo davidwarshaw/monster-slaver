@@ -7,6 +7,7 @@ export default {
   tileHeight: 16,
   mapWidthTiles: 100,
   mapHeightTiles: 100,
+  throwMillis: 1000,
   animFrameRate: 8,
   turnDelayMillis: 1000,
   turnDurationMillis: 300,

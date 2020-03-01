@@ -1,5 +1,5 @@
 import properties from '../properties';
-import pokemonDefinitions from './pokemonDefinitions.json';
+import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
 
 import Font from './Font';
 

@@ -1,5 +1,5 @@
 import properties from '../properties';
-import mapDefinitions from '../systems/mapDefinitions';
+import mapDefinitions from '../definitions/mapDefinitions';
 
 import MapGenerationSystem from '../systems/MapGenerationSystem';
 import BattleSystem from '../systems/BattleSystem';
