@@ -1,0 +1,20 @@
+{
+  "map-start": {
+    "type": "static"
+  },
+  "woods-1": {
+    "type": "dynamic",
+    "mapSizeTiles": {
+      "width": 40,
+      "height": 40
+    },
+    "tiles": {
+      "background": {
+        "base": [0, 1, 2, 3]
+      },
+      "collision": {
+        "wall": 150
+      }
+    }
+  }
+}

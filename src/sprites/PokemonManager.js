@@ -7,20 +7,41 @@ export default class PokemonManager {
 
     this.pokemon = [];
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 5 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 6 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 7 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 8 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 9 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 10 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 11 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 12 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 13 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 14 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 13 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 14 }, 'Bulbasaur'));
+
+    this.pokemon.slice(1).forEach(p => p.enslave());
 
     this.currentPokemonIndex = 0;
   }
 
-  getNext() {
-    
+  getNext() {}
+
+  getPokemonInBall() {
+    return this.pokemon.filter(p => p.alive && p.inBall);
   }
 
-  someOnTile(x, y) {
-    return this.pokemon.some(p => {
-      const tile = this.map.worldToTileXY(p.x, p.y);
-      console.log(tile);
-      console.log(`${x}, ${y}`);
-      return p.alive && tile.x === x && tile.y === y;
+  getPokemonByTile(tile) {
+    const candidates = this.pokemon.filter(p => {
+      const pTile = this.map.worldToTileXY(p.x, p.y);
+      return p.alive && !p.inBall && pTile.x === tile.x && pTile.y === tile.y;
     });
+    if (candidates.length === 0) {
+      return null;
+    }
+    return candidates[0];
+  }
+
+  someOnTile(tile) {
+    return this.getPokemonByTile(tile) != null;
   }
 }

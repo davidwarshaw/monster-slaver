@@ -5,9 +5,11 @@ export default {
   scale: 3,
   tileWidth: 16,
   tileHeight: 16,
-  mapWidthTiles: 20,
-  mapHeightTiles: 13,
-  animFrameRate: 4,
+  mapWidthTiles: 100,
+  mapHeightTiles: 100,
+  animFrameRate: 8,
   turnDelayMillis: 1000,
-  turnDurationMillis: 200
+  turnDurationMillis: 300,
+  uiFlashTint: 0x000000,
+  uiHangMillis: 100
 };

@@ -13,7 +13,12 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
     this.name = name;
     this.alive = true;
+    this.enslaved = false;
+    this.inBall = false;
     this.definition = pokemonDefinitions[name];
+    this.type = 'grass';
+    this.maxHealth = 100;
+    this.health = 100;
 
     scene.add.existing(this);
 
@@ -63,11 +68,27 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     });
 
     this.anims.play(`${name}_down`, true);
+    const stopFrame = this.anims.currentAnim.frames[0];
+    this.anims.stopOnFrame(stopFrame);
   }
 
   frameFromRowCol(index, row, col) {
     return index + col + row * 30;
   }
 
-  update(delta) {}
+  enslave() {
+    this.enslaved = true;
+    this.inBall = true;
+    this.setActive(false);
+    this.setVisible(false);
+  }
+
+  iChooseYou(tile) {
+    const { x, y } = TileMath.screenFromTile(tile);
+    this.setPosition(x, y);
+
+    this.inBall = false;
+    this.setActive(true);
+    this.setVisible(true);
+  }
 }

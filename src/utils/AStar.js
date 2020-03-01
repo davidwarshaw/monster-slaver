@@ -8,7 +8,7 @@ export default class AStar {
   }
 
   addNeighbor(neighbors, x, y) {
-    if (this.pokeManager.someOnTile(x, y) > 0) {
+    if (this.pokeManager.someOnTile({ x, y }) > 0) {
       return;
     }
 

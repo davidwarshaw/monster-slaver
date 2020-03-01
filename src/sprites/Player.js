@@ -2,10 +2,11 @@ import properties from '../properties';
 import TileMath from '../utils/TileMath';
 
 export default class Pokemon extends Phaser.GameObjects.Sprite {
-  constructor(scene, tile, male) {
+  constructor(scene, map, tile, male) {
     const spritesheetIndex = male ? 0 : 2;
 
     super(scene, 0, 0, 'player', spritesheetIndex);
+    this.map = map;
 
     const { x, y } = TileMath.screenFromTile(tile);
     this.setPosition(x, y);
@@ -66,12 +67,17 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       repeat: -1
     });
 
-    this.anims.play(`${name}_up`, true);
+    this.anims.play(`${name}_down`, true);
+    const stopFrame = this.anims.currentAnim.frames[0];
+    this.anims.stopOnFrame(stopFrame);
   }
 
   frameFromRowCol(index, row, col) {
     return index + col + row * 4;
   }
 
-  update(delta) {}
+  isOnTile(tile) {
+    const pTile = this.map.worldToTileXY(this.x, this.y);
+    return pTile.x === tile.x && pTile.y === tile.y;
+  }
 }

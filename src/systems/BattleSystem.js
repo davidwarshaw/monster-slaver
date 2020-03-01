@@ -2,9 +2,16 @@ import properties from '../properties';
 import TileMath from '../utils/TileMath';
 import AStar from '../utils/AStar';
 
+import InspectWindow from '../sprites/InspectWindow';
+import PokeballWindow from '../sprites/PokeballWindow';
+
 // Turn States
 const CHOOSE_ACTION = 'CHOOSE_ACTION';
 const TAKING_TURNS = 'TAKING_TURNS';
+const INSPECT = 'INSPECT';
+const POKEBALL_CHOOSE = 'POKEBALL_CHOOSE';
+const POKEBALL_CHOOSE_WAIT = 'POKEBALL_CHOOSE_WAIT';
+const POKEBALL_THROW = 'POKEBALL_THROW';
 
 // Turn Types
 const MOVE = 'MOVE';
@@ -27,19 +34,109 @@ export default class BattleSystem {
     console.log(`playerTile: ${playerTile.x}, ${playerTile.y}`);
     const astar = new AStar(this.collisionMap, this.player, this.pokemonManager);
     const path = astar.findPath(playerTile, toTile);
-    console.log(path);
+
+    //console.log(path);
     return path;
+  }
+
+  fillTurnQueueWithPath(path) {
+    // Skip the first tile
+    this.turnQueue = path.slice(1).map((tile, i) => {
+      const turn = {
+        character: this.player,
+        type: MOVE,
+        from: path[i], // NOTE: This is the previous tile, because we sliced the array
+        to: tile // The current tile
+      };
+      return turn;
+    });
+
+    console.log('turnQueue:');
+    console.log(this.turnQueue);
   }
 
   pointerdown(pointer) {
     console.log('\nPointer Down:');
     switch (this.turnState) {
+      case POKEBALL_THROW: {
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        console.log(worldPoint);
+        const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
+
+        // Throwing at the player cancels the throw
+        if (this.player.isOnTile(toTile)) {
+          this.turnState = CHOOSE_ACTION;
+          break;
+        }
+
+        // Can't throw at another pokemon
+        const pokemonTo = this.pokemonManager.getPokemonByTile(toTile);
+        if (pokemonTo) {
+          break;
+        }
+
+        // Can't throw on untraverable terrain
+        const collisionMapTile = this.collisionMap[TileMath.keyFromPoint(toTile)];
+        if (collisionMapTile) {
+          break;
+        }
+
+        this.selectedPokemon.iChooseYou(toTile);
+        this.turnState = CHOOSE_ACTION;
+        break;
+      }
+      case POKEBALL_CHOOSE: {
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        const selectedPokemon = this.pokeballWindow.selectPokemon(worldPoint);
+
+        // If we selected a pokemon, throw it
+        if (selectedPokemon) {
+          console.log('selectedPokemon:');
+          console.log(selectedPokemon);
+          this.selectedPokemon = selectedPokemon;
+          this.turnState = POKEBALL_CHOOSE_WAIT;
+
+          // After the hang delay, close the window and throw
+          this.scene.time.delayedCall(properties.uiHangMillis, () => {
+            this.pokeballWindow.destroy();
+            this.turnState = POKEBALL_THROW;
+          });
+        }
+
+        // otherwise, go back to the main screen
+        else {
+          this.pokeballWindow.destroy();
+          this.turnState = CHOOSE_ACTION;
+        }
+        break;
+      }
+      case INSPECT: {
+        this.inspectWindow.destroy();
+        this.turnState = CHOOSE_ACTION;
+        break;
+      }
       case CHOOSE_ACTION: {
-        const toTile = this.map.worldToTileXY(pointer.x, pointer.y);
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
         const world = this.map.tileToWorldXY(toTile.x, toTile.y);
         console.log(`pointer: ${pointer.x}, ${pointer.y}`);
         console.log(`toTile: ${toTile.x}, ${toTile.y}`);
         console.log(`world: ${world.x}, ${world.y}`);
+
+        if (this.player.isOnTile(toTile)) {
+          console.log('Click on player');
+          this.pokeballWindow = new PokeballWindow(this.scene, this.pokemonManager);
+          this.turnState = POKEBALL_CHOOSE;
+          break;
+        }
+
+        const pokemonTo = this.pokemonManager.getPokemonByTile(toTile);
+        if (pokemonTo) {
+          console.log('Click on pokemon');
+          this.inspectWindow = new InspectWindow(this.scene, pokemonTo);
+          this.turnState = INSPECT;
+          break;
+        }
 
         const collisionMapTile = this.collisionMap[TileMath.keyFromPoint(toTile)];
         console.log(`collisionMap: ${collisionMapTile}`);
@@ -54,21 +151,6 @@ export default class BattleSystem {
         break;
       }
     }
-  }
-
-  fillTurnQueueWithPath(path) {
-    // Skip the first tile
-    this.turnQueue = path.slice(1).map((tile, i) => {
-      const turn = {
-        character: this.player,
-        type: MOVE,
-        from: path[i], // NOTE: This is the previous tile, because we sliced the array
-        to: tile // The current tile
-      };
-      return turn;
-    });
-    console.log('turnQueue:');
-    console.log(this.turnQueue);
   }
 
   tryToTakeTurn() {
@@ -116,6 +198,5 @@ export default class BattleSystem {
         break;
       }
     }
-
   }
 }
