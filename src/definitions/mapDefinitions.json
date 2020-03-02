@@ -13,7 +13,19 @@
         "base": [0, 1, 2, 3]
       },
       "collision": {
-        "wall": 150
+        "wall": {
+          "north-south": 151,
+          "east-west": 166,
+          "north-west": 159,
+          "north-east": 158,
+          "south-west": 143,
+          "south-east": 142,
+          "no-north": 135,
+          "no-south": 150,
+          "no-east": 167,
+          "no-west": 165,
+          "default": 8
+        }
       }
     }
   }

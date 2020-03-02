@@ -11,6 +11,9 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     const { x, y } = TileMath.screenFromTile(tile);
     this.setPosition(x, y);
 
+    // Origin is more towards the bottom of the sprite
+    this.setOrigin(0.5, 0.6);
+
     this.name = name;
     scene.add.existing(this);
 

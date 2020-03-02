@@ -8,7 +8,7 @@ export default {
   mapWidthTiles: 100,
   mapHeightTiles: 100,
   throwMillis: 1000,
-  animFrameRate: 8,
+  animFrameRate: 4,
   turnDelayMillis: 1000,
   turnDurationMillis: 300,
   uiFlashTint: 0x000000,

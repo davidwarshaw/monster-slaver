@@ -10,5 +10,29 @@
   "Venusaur": {
     "index": 2,
     "speed": 1
+  },
+  "Charmander": {
+    "index": 3,
+    "speed": 0
+  },
+  "Charmeleon": {
+    "index": 4,
+    "speed": 1
+  },
+  "Charizard": {
+    "index": 5,
+    "speed": 1
+  },
+  "Squirtle": {
+    "index": 6,
+    "speed": 0
+  },
+  "Wartortle": {
+    "index": 7,
+    "speed": 1
+  },
+  "Blastoise": {
+    "index": 8,
+    "speed": 1
   }
 }

@@ -37,6 +37,43 @@ function getBits(map, x, y, tile) {
   return bits;
 }
 
+function getSingleAutoTile(map, x, y, tile) {
+  const west = getFromMap(map, x - 1, y) === tile;
+  const east = getFromMap(map, x + 1, y) === tile;
+  const north = getFromMap(map, x, y - 1) === tile;
+  const south = getFromMap(map, x, y + 1) === tile;
+  if (north && south) {
+    return 'north-south';
+  }
+  if (east && west) {
+    return 'east-west';
+  }
+  if (north && west) {
+    return 'north-west';
+  }
+  if (north && east) {
+    return 'north-east';
+  }
+  if (south && west) {
+    return 'south-west';
+  }
+  if (south && east) {
+    return 'south-east';
+  }
+  if (north && !south) {
+    return 'no-south';
+  }
+  if (south && !north) {
+    return 'no-north';
+  }
+  if (east && !west) {
+    return 'no-west';
+  }
+  if (west && !east) {
+    return 'no-east';
+  }
+}
+
 function neighborCount(map, x, y, neighbors) {
   const neighborsToCheck = Array.isArray(neighbors) ? neighbors : [neighbors];
 
@@ -61,6 +98,7 @@ function populateBackground(definition, layer) {
 
 function populateCollision(definition, layer) {
   const { width, height } = definition.mapSizeTiles;
+  const { wall } = definition.tiles.collision;
 
   const baseMap = generateBaseMap(width, height);
   const rotMap = new ROT.Map.DividedMaze(width, height);
@@ -70,7 +108,9 @@ function populateCollision(definition, layer) {
   baseMap.forEach((tileRow, y) => {
     tileRow.forEach((tile, x) => {
       if (tile === 'wall') {
-        layer.putTileAt(definition.tiles.collision.wall, x, y);
+        const autoTile = getSingleAutoTile(baseMap, x, y, 'wall');
+        const tileIndex = wall[autoTile] || wall['default'];
+        layer.putTileAt(tileIndex, x, y);
       }
     });
   });
