@@ -11,14 +11,16 @@ import Pokeball from '../sprites/Pokeball';
 const CHOOSE_ACTION = 'CHOOSE_ACTION';
 const TAKING_TURNS = 'TAKING_TURNS';
 const INSPECT = 'INSPECT';
+const INSPECT_WAIT = 'INSPECT_WAIT';
 const POKEBALL_CHOOSE = 'POKEBALL_CHOOSE';
 const POKEBALL_CHOOSE_WAIT = 'POKEBALL_CHOOSE_WAIT';
 const POKEBALL_THROW = 'POKEBALL_THROW';
 const POKEBALL_THROW_WAIT = 'POKEBALL_THROW_WAIT';
 
 // Turn Types
-const MOVE = 'MOVE';
 const ATTACK = 'ATTACK';
+const MOVE = 'MOVE';
+const WAIT = 'WAIT';
 
 export default class BattleSystem {
   constructor(scene, map, player, pokemonManager) {
@@ -30,6 +32,8 @@ export default class BattleSystem {
 
     this.turnState = CHOOSE_ACTION;
     this.turnQueue = [];
+
+    this.astar = new AStar(this.collisionMap, this.player, this.pokemonManager);
   }
 
   playerPathTo(toTile) {
@@ -112,7 +116,11 @@ export default class BattleSystem {
               pokeball.destroy();
             });
             this.selectedPokemon.iChooseYou(toTile);
-            this.turnState = CHOOSE_ACTION;
+
+            console.log('pokemonManager.startTurn:');
+            this.turnState = TAKING_TURNS;
+            this.pokemonManager.startTurn();
+            this.tryToTakePokemonTurn();
           },
           onCompleteScope: this
         });
@@ -146,8 +154,45 @@ export default class BattleSystem {
         break;
       }
       case INSPECT: {
-        this.inspectWindow.destroy();
-        this.turnState = CHOOSE_ACTION;
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        const pokemon = this.inspectWindow.selectButton(worldPoint);
+        if (pokemon) {
+          // After the hang delay, close the window and throw
+          this.scene.time.delayedCall(properties.uiHangMillis, () => {
+            this.inspectWindow.destroy();
+
+            // Tween the pokemon disapearing
+            this.scene.tweens.add({
+              targets: pokemon,
+              scale: 0.25,
+              duration: properties.captureMillis
+            });
+            this.scene.tweens.add({
+              targets: pokemon,
+              rotation: Math.PI * 2,
+              duration: properties.captureMillis,
+              onComplete: () => {
+                const pokeball = new Pokeball(this.scene, pokemon);
+                pokeball.play('pokeball_open', false);
+                pokeball.once('animationcomplete', () => {
+                  pokemon.enslave();
+                  pokeball.destroy();
+
+                  console.log('pokemonManager.startTurn:');
+                  this.turnState = TAKING_TURNS;
+                  this.pokemonManager.startTurn();
+                  this.tryToTakePokemonTurn();
+                });
+              },
+              onCompleteScope: this
+            });
+          });
+          this.turnState = INSPECT_WAIT;
+        }
+        else {
+          this.inspectWindow.destroy();
+          this.turnState = CHOOSE_ACTION;
+        }
         break;
       }
       case CHOOSE_ACTION: {
@@ -158,10 +203,18 @@ export default class BattleSystem {
         console.log(`toTile: ${toTile.x}, ${toTile.y}`);
         console.log(`world: ${world.x}, ${world.y}`);
 
-        if (this.player.isOnTile(toTile)) {
-          console.log('Click on player');
+        // Check button against screen point
+        if (this.scene.pokeballButton.selectButton(pointer)) {
+          console.log('Click on pokeball button');
           this.pokeballWindow = new PokeballWindow(this.scene, this.pokemonManager);
           this.turnState = POKEBALL_CHOOSE;
+          break;
+        }
+
+        if (this.player.isOnTile(toTile)) {
+          console.log('Click on player');
+          this.turnQueue = [{ character: this.player, type: WAIT }];
+          this.tryToTakePlayerTurn();
           break;
         }
 
@@ -182,15 +235,15 @@ export default class BattleSystem {
 
         console.log('Tile is traversable: filling turn queue with path');
         this.fillTurnQueueWithPath(this.playerPathTo(toTile));
-        this.tryToTakeTurn();
+        this.tryToTakePlayerTurn();
         break;
       }
     }
   }
 
-  tryToTakeTurn() {
+  tryToTakePlayerTurn() {
     // Left pop turn from the queue
-    console.log('tryToTakeTurn:');
+    console.log('tryToTakePlayerTurn:');
     const turn = this.turnQueue.shift();
     if (!turn) {
       console.log('No more turns: CHOOSE_ACTION');
@@ -198,40 +251,122 @@ export default class BattleSystem {
       return;
     }
     console.log('Turn found: TAKING_TURNS');
-    this.turnState = TAKING_TURNS;
     console.log(turn);
     switch (turn.type) {
+
+      // Player cannot attack
       case MOVE: {
-        // Play moving animation only if different from the one that's playing now
-        const moveAnimationKey = TileMath.animationKeyFromMove(turn.character, turn.from, turn.to);
-        const currentAnimationKey = turn.character.anims.getCurrentKey();
-        if (moveAnimationKey !== currentAnimationKey) {
-          turn.character.anims.play(moveAnimationKey);
-        }
-
-        // Tween movement
-        const toTileWorld = TileMath.addHalfTile(this.map.tileToWorldXY(turn.to.x, turn.to.y));
-        this.scene.tweens.add({
-          targets: turn.character,
-          x: toTileWorld.x,
-          y: toTileWorld.y,
-          duration: properties.turnDurationMillis,
-          onComplete: () => {
-            // Stop animation
-            const stopFrame = turn.character.anims.currentAnim.frames[0];
-            turn.character.anims.stopOnFrame(stopFrame);
-
-            // Try to take another turn
-            this.tryToTakeTurn();
-          },
-          onCompleteScope: this
+        this.characterMove(this.player, turn.to, () => {
+          console.log('pokemonManager.startTurn:');
+          this.turnState = TAKING_TURNS;
+          this.pokemonManager.startTurn();
+          this.tryToTakePokemonTurn();
         });
         break;
       }
-      case ATTACK: {
-        // TODO
+      case WAIT: {
+        console.log('pokemonManager.startTurn:');
+        this.turnState = TAKING_TURNS;
+        this.pokemonManager.startTurn();
+        this.tryToTakePokemonTurn();
         break;
       }
     }
+  }
+
+  tryToTakePokemonTurn() {
+    console.log('tryToTakePokemonTurn:');
+    const pokemon = this.pokemonManager.getNextInTurn();
+
+    // If there are no more pokemon, the turn is over
+    if (!pokemon) {
+      this.tryToTakePlayerTurn();
+      return;
+    }
+    const action = pokemon.chooseAction(this.map, this.player, this.pokemonManager, this.astar);
+    switch (action.type) {
+      case ATTACK: {
+        this.characterAttack(pokemon, action.target, () => {
+          this.tryToTakePokemonTurn();
+        });
+        break;
+      }
+      case MOVE: {
+        this.characterMove(pokemon, action.to, () => {
+          this.tryToTakePokemonTurn();
+        });
+        break;
+      }
+      case WAIT: {
+        this.tryToTakePokemonTurn();
+        break;
+      }
+    }
+
+    // Player takes their turn if they can
+    this.tryToTakePlayerTurn();
+  }
+
+  characterAttack(character, target, afterMove) {
+    console.log(`character: ${character.name} target: ${target.name}`);
+
+    // From is the characters current location, to is the targets
+    const from = this.map.worldToTileXY(character.x, character.y);
+    const to = this.map.worldToTileXY(target.x, target.y);
+
+    // Play moving animation only if different from the one that's playing now
+    const moveAnimationKey = TileMath.animationKeyFromMove(character, from, to);
+    const currentAnimationKey = character.anims.getCurrentKey();
+    if (moveAnimationKey !== currentAnimationKey) {
+      character.anims.play(moveAnimationKey);
+    }
+
+    this.scene.tweens.add({
+      targets: character,
+      x: target.x,
+      y: target.y,
+      duration: properties.attackMillis,
+      repeat: 0,
+      yoyo: true,
+      onComplete: () => {
+        // Stop animation
+        const stopFrame = character.anims.currentAnim.frames[0];
+        character.anims.stopOnFrame(stopFrame);
+        afterMove();
+      },
+      onCompleteScope: this
+    });
+  }
+
+  characterMove(character, to, afterMove) {
+    console.log(`character: ${character.name} to: ${to.x}, ${to.y}`);
+
+    // From is the characters current location
+    const from = this.map.worldToTileXY(character.x, character.y);
+
+    // Play moving animation only if different from the one that's playing now
+    const moveAnimationKey = TileMath.animationKeyFromMove(character, from, to);
+    const currentAnimationKey = character.anims.getCurrentKey();
+
+    // Play a new animation it's different than the previous one, or if nothing is playing
+    if (moveAnimationKey !== currentAnimationKey || !character.anims.isPlaying) {
+      character.anims.play(moveAnimationKey);
+    }
+
+    // Tween movement
+    const toTileWorld = TileMath.addHalfTile(this.map.tileToWorldXY(to.x, to.y));
+    this.scene.tweens.add({
+      targets: character,
+      x: toTileWorld.x,
+      y: toTileWorld.y,
+      duration: properties.turnDurationMillis,
+      onComplete: () => {
+        // Stop animation
+        const stopFrame = character.anims.currentAnim.frames[0];
+        character.anims.stopOnFrame(stopFrame);
+        afterMove();
+      },
+      onCompleteScope: this
+    });
   }
 }

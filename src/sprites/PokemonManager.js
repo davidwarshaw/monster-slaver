@@ -16,15 +16,26 @@ export default class PokemonManager {
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 12 }, 'Squirtle'));
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 13 }, 'Wartortle'));
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 14 }, 'Blastoise'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 13 }, 'Bulbasaur'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 14 }, 'Bulbasaur'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 13 }, 'Caterpie'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 14 }, 'Metapod'));
+    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 15 }, 'Butterfree'));
 
     this.pokemon.slice(1).forEach(p => p.enslave());
 
-    this.currentPokemonIndex = 0;
+    this.turnList = [];
   }
 
-  getNext() {}
+  startTurn() {
+    console.log(this.pokemon);
+    this.turnList = this.pokemon
+      .filter(p => p.alive && !p.inBall)
+      .sort((l, r) => r.definition.speed - l.definition.speed);
+  }
+
+  getNextInTurn() {
+    console.log(this.turnList);
+    return this.turnList.shift();
+  }
 
   getPokemonInBall() {
     return this.pokemon.filter(p => p.alive && p.inBall);

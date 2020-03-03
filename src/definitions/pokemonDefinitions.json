@@ -34,5 +34,17 @@
   "Blastoise": {
     "index": 8,
     "speed": 1
+  },
+  "Caterpie": {
+    "index": 9,
+    "speed": 0
+  },
+  "Metapod": {
+    "index": 10,
+    "speed": 1
+  },
+  "Butterfree": {
+    "index": 11,
+    "speed": 1
   }
 }

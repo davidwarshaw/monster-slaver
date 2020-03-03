@@ -7,6 +7,8 @@ import BattleSystem from '../systems/BattleSystem';
 import PokemonManager from '../sprites/PokemonManager';
 import Player from '../sprites/Player';
 
+import PokeballButton from '../ui/PokeballButton';
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameScene' });
@@ -32,6 +34,9 @@ export default class GameScene extends Phaser.Scene {
 
     // Now foreground
     this.createForegroundLayer();
+
+    // The pokeball button
+    this.pokeballButton = new PokeballButton(this);
 
     // Create the systems
     this.battleSystem = new BattleSystem(this, this.map, this.player, this.pokemonManager);

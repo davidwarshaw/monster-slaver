@@ -14,6 +14,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     // Origin is more towards the bottom of the sprite
     this.setOrigin(0.5, 0.6);
 
+    const name = 'player';
     this.name = name;
     scene.add.existing(this);
 

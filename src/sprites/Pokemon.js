@@ -2,6 +2,11 @@ import properties from '../properties';
 import TileMath from '../utils/TileMath';
 import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
 
+// Turn Types
+const ATTACK = 'ATTACK';
+const MOVE = 'MOVE';
+const WAIT = 'WAIT';
+
 export default class Pokemon extends Phaser.GameObjects.Sprite {
   constructor(scene, tile, name) {
     const spritesheetIndex = pokemonDefinitions[name].index * 2;
@@ -16,7 +21,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     this.enslaved = false;
     this.inBall = false;
     this.definition = pokemonDefinitions[name];
-    this.type = 'grass';
+    this.type = 'type';
     this.maxHealth = 100;
     this.health = 100;
 
@@ -90,5 +95,36 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     this.inBall = false;
     this.setActive(true);
     this.setVisible(true);
+  }
+
+  chooseAction(map, player, pokemonManager, astar) {
+    const { x, y } = map.worldToTileXY(this.x, this.y);
+
+    // Check for pokemon to attack, start at north then go clockwise
+    const attackCandidates = [
+      pokemonManager.getPokemonByTile({ x, y: y - 1 }),
+      pokemonManager.getPokemonByTile({ x: x + 1, y }),
+      pokemonManager.getPokemonByTile({ x, y: y + 1 }),
+      pokemonManager.getPokemonByTile({ x: x - 1, y })
+    ]
+      .filter(candidate => candidate)
+      .filter(candidate => candidate.enslaved !== this.enslaved);
+
+    console.log('attackCandidates:');
+    console.log(attackCandidates);
+    if (attackCandidates.length > 0) {
+      return { type: ATTACK, target: attackCandidates[0] };
+    }
+
+    const playerTile = map.worldToTileXY(player.x, player.y);
+    const pathToPlayer = astar.findPath({ x, y }, playerTile);
+    console.log('pathToPlayer:');
+    console.log(pathToPlayer);
+    if (pathToPlayer.length > 2) {
+      const nextTile = pathToPlayer[1];
+      return { type: MOVE, to: nextTile };
+    }
+
+    return { type: WAIT };
   }
 }
