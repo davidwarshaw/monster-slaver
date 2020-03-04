@@ -35,7 +35,8 @@ export default class InspectWindow {
     this.images.push(this.font.render(centerX - centeredOffset, centerY + 16, healthString));
 
     if (this.capturable) {
-      this.images.push(this.font.render(centerX - 8 * 3 - 4, centerY + 32, 'capture'));
+      const label = pokemon.enslaved ? 'recall' : 'capture';
+      this.images.push(this.font.render(centerX - 8 * 3 - 4, centerY + 32, label));
       this.images.push(scene.add.image(centerX, centerY + 32 + 4, 'select-frame'));
       this.images[this.images.length - 1].setVisible(false);
     }

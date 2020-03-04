@@ -4,8 +4,11 @@ import AStar from '../utils/AStar';
 
 import InspectWindow from '../ui/InspectWindow';
 import PokeballWindow from '../ui/PokeballWindow';
+import RisingNumbers from '../ui/RisingNumbers';
 
 import Pokeball from '../sprites/Pokeball';
+
+import MeleeSystem from './MeleeSystem';
 
 // Turn States
 const CHOOSE_ACTION = 'CHOOSE_ACTION';
@@ -32,6 +35,8 @@ export default class BattleSystem {
 
     this.turnState = CHOOSE_ACTION;
     this.turnQueue = [];
+
+    this.meleeSystem = new MeleeSystem();
 
     this.astar = new AStar(this.collisionMap, this.player, this.pokemonManager);
   }
@@ -117,6 +122,8 @@ export default class BattleSystem {
             });
             this.selectedPokemon.iChooseYou(toTile);
 
+            this.scene.pokeballButton.hidePreview();
+
             console.log('pokemonManager.startTurn:');
             this.turnState = TAKING_TURNS;
             this.pokemonManager.startTurn();
@@ -138,6 +145,8 @@ export default class BattleSystem {
           console.log(selectedPokemon);
           this.selectedPokemon = selectedPokemon;
           this.turnState = POKEBALL_CHOOSE_WAIT;
+
+          this.scene.pokeballButton.showPreview(this.selectedPokemon);
 
           // After the hang delay, close the window and throw
           this.scene.time.delayedCall(properties.uiHangMillis, () => {
@@ -214,6 +223,7 @@ export default class BattleSystem {
         if (this.player.isOnTile(toTile)) {
           console.log('Click on player');
           this.turnQueue = [{ character: this.player, type: WAIT }];
+          this.turnState = TAKING_TURNS;
           this.tryToTakePlayerTurn();
           break;
         }
@@ -234,6 +244,7 @@ export default class BattleSystem {
         }
 
         console.log('Tile is traversable: filling turn queue with path');
+        this.turnState = TAKING_TURNS;
         this.fillTurnQueueWithPath(this.playerPathTo(toTile));
         this.tryToTakePlayerTurn();
         break;
@@ -256,12 +267,17 @@ export default class BattleSystem {
 
       // Player cannot attack
       case MOVE: {
-        this.characterMove(this.player, turn.to, () => {
+        const moveSucceeded = this.characterMove(this.player, turn.to, () => {
           console.log('pokemonManager.startTurn:');
           this.turnState = TAKING_TURNS;
           this.pokemonManager.startTurn();
           this.tryToTakePokemonTurn();
         });
+
+        // If a move fails, kill the turn queue
+        if (!moveSucceeded) {
+          this.turnQueue = [];
+        }
         break;
       }
       case WAIT: {
@@ -302,9 +318,6 @@ export default class BattleSystem {
         break;
       }
     }
-
-    // Player takes their turn if they can
-    this.tryToTakePlayerTurn();
   }
 
   characterAttack(character, target, afterMove) {
@@ -332,6 +345,19 @@ export default class BattleSystem {
         // Stop animation
         const stopFrame = character.anims.currentAnim.frames[0];
         character.anims.stopOnFrame(stopFrame);
+
+        const hit = 10;
+        const damage = -hit;
+        const earnHealth = true;
+
+        // Damage numbers on target
+        new RisingNumbers(this.scene, target, damage);
+
+        if (earnHealth) {
+          // Health numbers on pokeball
+          new RisingNumbers(this.scene, this.scene.pokeballButton, hit, true);
+        }
+
         afterMove();
       },
       onCompleteScope: this
@@ -340,6 +366,17 @@ export default class BattleSystem {
 
   characterMove(character, to, afterMove) {
     console.log(`character: ${character.name} to: ${to.x}, ${to.y}`);
+
+    // If the to tile is occupied, don't move there
+    const pokemonTo = this.pokemonManager.getPokemonByTile(to);
+    if (pokemonTo) {
+      console.log(`Move cancelled. Tile occupied: ${pokemonTo.name}`);
+      return false;
+    }
+    if (this.player.isOnTile(to)) {
+      console.log('Move cancelled. Tile occupied by player');
+      return false;
+    }
 
     // From is the characters current location
     const from = this.map.worldToTileXY(character.x, character.y);
@@ -368,5 +405,7 @@ export default class BattleSystem {
       },
       onCompleteScope: this
     });
+
+    return true;
   }
 }

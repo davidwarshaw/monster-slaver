@@ -21,8 +21,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     this.enslaved = false;
     this.inBall = false;
     this.definition = pokemonDefinitions[name];
-    this.type = 'type';
-    this.maxHealth = 100;
+
     this.health = 100;
 
     scene.add.existing(this);

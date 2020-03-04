@@ -1,5 +1,10 @@
+import * as ROT from 'rot-js';
+
+ROT.RNG.setSeed(1);
+
 export default {
   debug: true,
+  rng: ROT.RNG,
   width: 320,
   height: 208,
   scale: 3,
@@ -10,6 +15,7 @@ export default {
   throwMillis: 1000,
   captureMillis: 500,
   attackMillis: 100,
+  numberMillis: 1200,
   animFrameRate: 10,
   turnDelayMillis: 1000,
   turnDurationMillis: 300,
