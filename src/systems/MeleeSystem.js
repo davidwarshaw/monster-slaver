@@ -1,6 +1,6 @@
 import properties from '../properties';
 
-const types = ['Earth', 'Wind', 'Fire', 'Water', 'Spirit'];
+const types = ['earth', 'wind', 'fire', 'water', 'spirit'];
 
 export default class MeleeSystem {
   constructor() {
@@ -35,13 +35,13 @@ export default class MeleeSystem {
   attackDamageBySize(size) {
     switch (size) {
       case 1: {
-        return 60;
+        return 5;
       }
       case 2: {
-        return 70;
+        return 10;
       }
       case 3: {
-        return 80;
+        return 15;
       }
     }
   }

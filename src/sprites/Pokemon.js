@@ -15,6 +15,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
     const { x, y } = TileMath.screenFromTile(tile);
     this.setPosition(x, y);
+    this.updateDepth();
 
     this.name = name;
     this.alive = true;
@@ -22,7 +23,11 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     this.inBall = false;
     this.definition = pokemonDefinitions[name];
 
-    this.health = 100;
+    this.maxHealth = Phaser.Math.RoundTo(
+      40 + this.definition.size * 20 * properties.rng.getUniform(),
+      1
+    );
+    this.health = this.maxHealth;
 
     scene.add.existing(this);
 
@@ -70,6 +75,10 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       frameRate: properties.animFrameRate,
       repeat: -1
     });
+    scene.anims.create({
+      key: `${name}_dead`,
+      frames: scene.anims.generateFrameNumbers('uwumbstone', { frames: [0] })
+    });
 
     this.anims.play(`${name}_down`, true);
     const stopFrame = this.anims.currentAnim.frames[0];
@@ -78,6 +87,26 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
   frameFromRowCol(index, row, col) {
     return index + col + row * 30;
+  }
+
+  updateDepth() {
+    this.depth = this.y - 500;
+  }
+
+  doDamage(damage) {
+    this.health -= damage;
+    if (this.health <= 0) {
+      this.alive = false;
+      this.anims.play(`${this.name}_dead`);
+      this.depth = -900;
+    }
+  }
+
+  heal(health) {
+    this.health += health;
+    if (this.health > this.maxHealth) {
+      this.alive = this.maxHealth;
+    }
   }
 
   enslave() {

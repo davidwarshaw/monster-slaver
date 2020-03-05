@@ -5,6 +5,8 @@ export default class PokemonManager {
     this.scene = scene;
     this.map = map;
 
+    this.identified = {};
+
     this.pokemon = [];
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 5 }, 'Bulbasaur'));
     this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 6 }, 'Bulbasaur'));
@@ -20,7 +22,7 @@ export default class PokemonManager {
     this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 14 }, 'Metapod'));
     this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 15 }, 'Butterfree'));
 
-    this.pokemon.slice(1).forEach(p => p.enslave());
+    this.pokemon.slice(1).forEach(p => this.enslave(p));
 
     this.turnList = [];
   }
@@ -54,5 +56,22 @@ export default class PokemonManager {
 
   someOnTile(tile) {
     return this.getPokemonByTile(tile) != null;
+  }
+
+  enslave(pokemon) {
+    this.identified[pokemon.name] = true;
+    pokemon.enslave();
+  }
+
+  doDamage(pokemon, damage) {
+    pokemon.doDamage(damage);
+  }
+
+  healBall(health) {
+    this.getPokemonInBall().forEach(p => p.heal(health));
+  }
+
+  spaceInBall() {
+    return this.getPokemonInBall().length < 16;
   }
 }

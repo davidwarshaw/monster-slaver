@@ -10,6 +10,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
     const { x, y } = TileMath.screenFromTile(tile);
     this.setPosition(x, y);
+    this.updateDepth();
 
     // Origin is more towards the bottom of the sprite
     this.setOrigin(0.5, 0.6);
@@ -78,6 +79,10 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
   frameFromRowCol(index, row, col) {
     return index + col + row * 4;
+  }
+
+  updateDepth() {
+    this.depth = this.y - 500;
   }
 
   isOnTile(tile) {

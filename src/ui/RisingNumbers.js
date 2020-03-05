@@ -13,6 +13,10 @@ export default class RisingNumbers {
       text.setScrollFactor(0);
     }
 
+    if (number > 0) {
+      text.tint = 0x73fa79;
+    }
+
     scene.tweens.add({
       targets: text,
       alpha: 0,

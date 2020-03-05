@@ -4,7 +4,7 @@ import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
 import Font from './Font';
 
 export default class InspectWindow {
-  constructor(scene, pokemon) {
+  constructor(scene, pokemon, pokemonManager) {
     const definition = pokemonDefinitions[pokemon.name];
     const worldPoint = scene.cameras.main.getWorldPoint(
       properties.width / 2,
@@ -13,33 +13,53 @@ export default class InspectWindow {
     const centerX = worldPoint.x;
     const centerY = worldPoint.y;
 
+    this.font = new Font(scene);
+
     this.pokemon = pokemon;
 
-    this.capturable = pokemon.enslaved;
+    const identified = this.pokemon.name in pokemonManager.identified;
+
+    this.capturable = (pokemon.health <= 10 || pokemon.enslaved) && pokemonManager.spaceInBall();
 
     this.images = [];
 
     this.images.push(scene.add.image(centerX, centerY, 'window-small'));
 
-    this.font = new Font(scene);
-    let centeredOffset = 8 * (pokemon.name.length / 2);
-    this.images.push(this.font.render(centerX - centeredOffset, centerY - 40, pokemon.name));
+    let offsetCenterY = centerY - 48;
+    this.images.push(
+      this.font.render(centerX + this.offsetForText(pokemon.name), offsetCenterY, pokemon.name)
+    );
 
-    this.images.push(scene.add.image(centerX, centerY - 16, 'pokemon', definition.index * 2 + 1));
+    offsetCenterY += 22;
+    this.images.push(scene.add.image(centerX, offsetCenterY, 'pokemon', definition.index * 2 + 1));
 
-    centeredOffset = 8 * (pokemon.type.length / 2);
-    this.images.push(this.font.render(centerX - centeredOffset, centerY, pokemon.type));
+    offsetCenterY += 13;
+    const type = identified ? pokemon.definition.type.toString() : '???';
+    this.images.push(this.font.render(centerX + this.offsetForText(type), offsetCenterY, type));
 
-    const healthString = `${pokemon.health}/${pokemon.maxHealth}`;
-    centeredOffset = 8 * (healthString.length / 2);
-    this.images.push(this.font.render(centerX - centeredOffset, centerY + 16, healthString));
+    offsetCenterY += 13;
+    const size = identified ? `size: ${pokemon.definition.size}` : 'size: ???';
+    this.images.push(this.font.render(centerX + this.offsetForText(size), offsetCenterY, size));
 
+    offsetCenterY += 13;
+    const speed = identified ? `speed: ${pokemon.definition.speed}` : 'speed: ???';
+    this.images.push(this.font.render(centerX + this.offsetForText(speed), offsetCenterY, speed));
+
+    offsetCenterY += 13;
+    const health = `hp: ${pokemon.health}/${pokemon.maxHealth}`;
+    this.images.push(this.font.render(centerX + this.offsetForText(health), offsetCenterY, health));
+
+    offsetCenterY += 13;
     if (this.capturable) {
       const label = pokemon.enslaved ? 'recall' : 'capture';
-      this.images.push(this.font.render(centerX - 8 * 3 - 4, centerY + 32, label));
-      this.images.push(scene.add.image(centerX, centerY + 32 + 4, 'select-frame'));
+      this.images.push(this.font.render(centerX + this.offsetForText(label), offsetCenterY, label));
+      this.images.push(scene.add.image(centerX, offsetCenterY + 4, 'select-frame'));
       this.images[this.images.length - 1].setVisible(false);
     }
+  }
+
+  offsetForText(text) {
+    return -(text.length * 8) / 2;
   }
 
   selectButton(point) {

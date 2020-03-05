@@ -1,62 +1,908 @@
 {
   "Bulbasaur": {
-    "index": 0,
+    "index": 1,
+    "type": "earth",
     "size": 1,
-    "speed": 0
+    "speed": 3
   },
   "Ivysaur": {
-    "index": 1,
+    "index": 2,
+    "type": "earth",
     "size": 2,
-    "speed": 1
+    "speed": 2
   },
   "Venusaur": {
-    "index": 2,
+    "index": 3,
+    "type": "earth",
     "size": 3,
     "speed": 1
   },
   "Charmander": {
-    "index": 3,
+    "index": 4,
+    "type": "fire",
     "size": 1,
-    "speed": 0
+    "speed": 3
   },
   "Charmeleon": {
-    "index": 4,
+    "index": 5,
+    "type": "fire",
     "size": 2,
-    "speed": 1
+    "speed": 2
   },
   "Charizard": {
-    "index": 5,
+    "index": 6,
+    "type": "fire",
     "size": 3,
     "speed": 1
   },
   "Squirtle": {
-    "index": 6,
+    "index": 7,
+    "type": "water",
     "size": 1,
-    "speed": 0
+    "speed": 3
   },
   "Wartortle": {
-    "index": 7,
+    "index": 8,
+    "type": "water",
     "size": 2,
-    "speed": 1
+    "speed": 2
   },
   "Blastoise": {
-    "index": 8,
+    "index": 9,
+    "type": "water",
     "size": 3,
     "speed": 1
   },
   "Caterpie": {
-    "index": 9,
+    "index": 10,
+    "type": "wind",
     "size": 1,
-    "speed": 0
+    "speed": 3
   },
   "Metapod": {
-    "index": 10,
+    "index": 11,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Butterfree": {
+    "index": 12,
+    "type": "wind",
+    "size": 3,
+    "speed": 2
+  },
+  "Weedle": {
+    "index": 13,
+    "type": "wind",
+    "size": 1,
+    "speed": 3
+  },
+  "Kakuna": {
+    "index": 14,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Beedrill": {
+    "index": 15,
+    "type": "wind",
+    "size": 3,
+    "speed": 2
+  },
+  "Pidgey": {
+    "index": 16,
+    "type": "wind",
+    "size": 1,
+    "speed": 3
+  },
+  "Pidgeotto": {
+    "index": 17,
+    "type": "wind",
+    "size": 2,
+    "speed": 3
+  },
+  "Pidgeot": {
+    "index": 18,
+    "type": "wind",
+    "size": 3,
+    "speed": 1
+  },
+  "Rattata": {
+    "index": 19,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Raticate": {
+    "index": 20,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Spearow": {
+    "index": 21,
+    "type": "wind",
+    "size": 1,
+    "speed": 3
+  },
+  "Fearow": {
+    "index": 22,
+    "type": "wind",
+    "size": 2,
+    "speed": 3
+  },
+  "Ekans": {
+    "index": 23,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Arbok": {
+    "index": 24,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Pikachu": {
+    "index": 25,
+    "type": "fire",
+    "size": 1,
+    "speed": 3
+  },
+  "Raichu": {
+    "index": 26,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Sandshrew": {
+    "index": 27,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Sandslash": {
+    "index": 28,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Nidoran♀": {
+    "index": 29,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Nidorina": {
+    "index": 30,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Nidoqueen": {
+    "index": 31,
+    "type": "water",
+    "size": 3,
+    "speed": 1
+  },
+  "Nidoran♂": {
+    "index": 32,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Nidorino": {
+    "index": 33,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Nidoking": {
+    "index": 34,
+    "type": "water",
+    "size": 3,
+    "speed": 1
+  },
+  "Clefairy": {
+    "index": 35,
+    "type": "spirit",
+    "size": 1,
+    "speed": 2
+  },
+  "Clefable": {
+    "index": 36,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Vulpix": {
+    "index": 37,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Ninetales": {
+    "index": 38,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Jigglypuff": {
+    "index": 39,
+    "type": "spirit",
+    "size": 2,
+    "speed": 3
+  },
+  "Wigglytuff": {
+    "index": 40,
+    "type": "spirit",
+    "size": 3,
+    "speed": 3
+  },
+  "Zubat": {
+    "index": 41,
+    "type": "wind",
+    "size": 1,
+    "speed": 3
+  },
+  "Golbat": {
+    "index": 42,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Oddish": {
+    "index": 43,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Gloom": {
+    "index": 44,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Vileplume": {
+    "index": 45,
+    "type": "earth",
+    "size": 3,
+    "speed": 1
+  },
+  "Paras": {
+    "index": 46,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Parasect": {
+    "index": 47,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Venonat": {
+    "index": 48,
+    "type": "wind",
+    "size": 1,
+    "speed": 3
+  },
+  "Venomoth": {
+    "index": 49,
+    "type": "wind",
+    "size": 2,
+    "speed": 3
+  },
+  "Diglett": {
+    "index": 50,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Dugtrio": {
+    "index": 51,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Meowth": {
+    "index": 52,
+    "type": "fire",
+    "size": 2,
+    "speed": 3
+  },
+  "Persian": {
+    "index": 53,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Psyduck": {
+    "index": 54,
+    "type": "spirit",
+    "size": 1,
+    "speed": 3
+  },
+  "Golduck": {
+    "index": 55,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Mankey": {
+    "index": 56,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Primeape": {
+    "index": 57,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Growlithe": {
+    "index": 58,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Arcanine": {
+    "index": 59,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Poliwag": {
+    "index": 60,
+    "type": "spirit",
+    "size": 1,
+    "speed": 2
+  },
+  "Poliwhirl": {
+    "index": 61,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Poliwrath": {
+    "index": 62,
+    "type": "spirit",
+    "size": 3,
+    "speed": 1
+  },
+  "Abra": {
+    "index": 63,
+    "type": "fire",
+    "size": 1,
+    "speed": 3
+  },
+  "Kadabra": {
+    "index": 64,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Alakazam": {
+    "index": 65,
+    "type": "fire",
+    "size": 3,
+    "speed": 1
+  },
+  "Machop": {
+    "index": 66,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Machoke": {
+    "index": 67,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Machamp": {
+    "index": 68,
+    "type": "earth",
+    "size": 3,
+    "speed": 1
+  },
+  "Bellsprout": {
+    "index": 69,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Weepinbell": {
+    "index": 70,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Victreebel": {
+    "index": 71,
+    "type": "earth",
+    "size": 3,
+    "speed": 1
+  },
+  "Tentacool": {
+    "index": 72,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Tentacruel": {
+    "index": 73,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Geodude": {
+    "index": 74,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Graveler": {
+    "index": 75,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Golem": {
+    "index": 76,
+    "type": "earth",
+    "size": 3,
+    "speed": 1
+  },
+  "Ponyta": {
+    "index": 77,
+    "type": "fire",
+    "size": 1,
+    "speed": 3
+  },
+  "Rapidash": {
+    "index": 78,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Slowpoke": {
+    "index": 79,
+    "type": "spirit",
+    "size": 1,
+    "speed": 3
+  },
+  "Slowbro": {
+    "index": 80,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Magnemite": {
+    "index": 81,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Magneton": {
+    "index": 82,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Farfetch'd": {
+    "index": 83,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Doduo": {
+    "index": 84,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Dodrio": {
+    "index": 85,
+    "type": "earth",
+    "size": 3,
+    "speed": 1
+  },
+  "Seel": {
+    "index": 86,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Dewgong": {
+    "index": 87,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Grimer": {
+    "index": 88,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Muk": {
+    "index": 89,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Shellder": {
+    "index": 90,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Cloyster": {
+    "index": 91,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Gastly": {
+    "index": 92,
+    "type": "spirit",
+    "size": 1,
+    "speed": 3
+  },
+  "Haunter": {
+    "index": 93,
+    "type": "spirit",
+    "size": 2,
+    "speed": 3
+  },
+  "Gengar": {
+    "index": 94,
+    "type": "spirit",
+    "size": 3,
+    "speed": 3
+  },
+  "Onix": {
+    "index": 95,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Drowzee": {
+    "index": 96,
+    "type": "spirit",
+    "size": 1,
+    "speed": 3
+  },
+  "Hypno": {
+    "index": 97,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Krabby": {
+    "index": 98,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Kingler": {
+    "index": 99,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Voltorb": {
+    "index": 100,
+    "type": "fire",
+    "size": 1,
+    "speed": 2
+  },
+  "Electrode": {
+    "index": 101,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Exeggcute": {
+    "index": 102,
+    "type": "earth",
+    "size": 1,
+    "speed": 2
+  },
+  "Exeggutor": {
+    "index": 103,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Cubone": {
+    "index": 104,
+    "type": "earth",
+    "size": 1,
+    "speed": 2
+  },
+  "Marowak": {
+    "index": 105,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Hitmonlee": {
+    "index": 106,
+    "type": "earth",
+    "size": 1,
+    "speed": 2
+  },
+  "Hitmonchan": {
+    "index": 107,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Lickitung": {
+    "index": 108,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Koffing": {
+    "index": 109,
+    "type": "wind",
+    "size": 1,
+    "speed": 1
+  },
+  "Weezing": {
+    "index": 110,
+    "type": "wind",
     "size": 2,
     "speed": 1
   },
-  "Butterfree": {
-    "index": 11,
+  "Rhyhorn": {
+    "index": 111,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Rhydon": {
+    "index": 112,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Chansey": {
+    "index": 113,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Tangela": {
+    "index": 114,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Kangaskhan": {
+    "index": 115,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Horsea": {
+    "index": 116,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Seadra": {
+    "index": 117,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Goldeen": {
+    "index": 118,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Seaking": {
+    "index": 119,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Staryu": {
+    "index": 120,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Starmie": {
+    "index": 121,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Mr. Mime": {
+    "index": 122,
+    "type": "spirit",
+    "size": 1,
+    "speed": 2
+  },
+  "Scyther": {
+    "index": 123,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Jynx": {
+    "index": 124,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
+  },
+  "Electabuzz": {
+    "index": 125,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Magmar": {
+    "index": 126,
+    "type": "fire",
+    "size": 2,
+    "speed": 2
+  },
+  "Pinsir": {
+    "index": 127,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Tauros": {
+    "index": 128,
+    "type": "eaerth",
+    "size": 2,
+    "speed": 2
+  },
+  "Magikarp": {
+    "index": 129,
+    "type": "water",
+    "size": 1,
+    "speed": 3
+  },
+  "Gyarados": {
+    "index": 130,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Lapras": {
+    "index": 131,
+    "type": "water",
+    "size": 2,
+    "speed": 2
+  },
+  "Ditto": {
+    "index": 132,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Eevee": {
+    "index": 133,
+    "type": "wind",
+    "size": 1,
+    "speed": 2
+  },
+  "Vaporeon": {
+    "index": 134,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Jolteon": {
+    "index": 135,
+    "type": "wind",
+    "size": 3,
+    "speed": 2
+  },
+  "Flareon": {
+    "index": 136,
+    "type": "fire",
+    "size": 3,
+    "speed": 2
+  },
+  "Porygon": {
+    "index": 137,
+    "type": "spirit",
+    "size": 1,
+    "speed": 3
+  },
+  "Omanyte": {
+    "index": 138,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Omastar": {
+    "index": 139,
+    "type": "water",
+    "size": 2,
+    "speed": 1
+  },
+  "Kabuto": {
+    "index": 140,
+    "type": "earth",
+    "size": 1,
+    "speed": 3
+  },
+  "Kabutops": {
+    "index": 141,
+    "type": "earth",
+    "size": 2,
+    "speed": 2
+  },
+  "Aerodactyl": {
+    "index": 142,
+    "type": "wind",
     "size": 3,
     "speed": 1
+  },
+  "Snorlax": {
+    "index": 143,
+    "type": "spirit",
+    "size": 3,
+    "speed": 1
+  },
+  "Articuno": {
+    "index": 144,
+    "type": "wind",
+    "size": 2,
+    "speed": 2
+  },
+  "Zapdos": {
+    "index": 145,
+    "type": "wind",
+    "size": 3,
+    "speed": 1
+  },
+  "Moltres": {
+    "index": 146,
+    "type": "fire",
+    "size": 3,
+    "speed": 2
+  },
+  "Dratini": {
+    "index": 147,
+    "type": "water",
+    "size": 3,
+    "speed": 1
+  },
+  "Dragonair": {
+    "index": 148,
+    "type": "water",
+    "size": 1,
+    "speed": 2
+  },
+  "Dragonite": {
+    "index": 149,
+    "type": "fire",
+    "size": 2,
+    "speed": 1
+  },
+  "Mewtwo": {
+    "index": 150,
+    "type": "spirit",
+    "size": 3,
+    "speed": 3
+  },
+  "Mew": {
+    "index": 151,
+    "type": "spirit",
+    "size": 2,
+    "speed": 2
   }
 }

@@ -32,6 +32,10 @@ export default class BootScene extends Phaser.Scene {
       margin: 0,
       spacing: 0
     });
+    this.load.spritesheet('uwumbstone', 'assets/images/uwumbstone.png', {
+      frameWidth: 16,
+      frameHeight: 16
+    });
   }
 
   create() {

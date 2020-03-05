@@ -69,6 +69,7 @@ export default class BattleSystem {
 
   pointerdown(pointer) {
     console.log('\nPointer Down:');
+    console.log(`turnState: ${this.turnState}`);
     switch (this.turnState) {
       case POKEBALL_THROW: {
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
@@ -92,6 +93,9 @@ export default class BattleSystem {
         if (collisionMapTile) {
           break;
         }
+
+        // Hide the preview when we thorw the ball
+        this.scene.pokeballButton.hidePreview();
 
         // Tween the pokeball throw
         const pokeball = new Pokeball(this.scene, this.player);
@@ -121,8 +125,6 @@ export default class BattleSystem {
               pokeball.destroy();
             });
             this.selectedPokemon.iChooseYou(toTile);
-
-            this.scene.pokeballButton.hidePreview();
 
             console.log('pokemonManager.startTurn:');
             this.turnState = TAKING_TURNS;
@@ -231,7 +233,7 @@ export default class BattleSystem {
         const pokemonTo = this.pokemonManager.getPokemonByTile(toTile);
         if (pokemonTo) {
           console.log('Click on pokemon');
-          this.inspectWindow = new InspectWindow(this.scene, pokemonTo);
+          this.inspectWindow = new InspectWindow(this.scene, pokemonTo, this.pokemonManager);
           this.turnState = INSPECT;
           break;
         }
@@ -277,6 +279,7 @@ export default class BattleSystem {
         // If a move fails, kill the turn queue
         if (!moveSucceeded) {
           this.turnQueue = [];
+          this.turnState = CHOOSE_ACTION;
         }
         break;
       }
@@ -299,6 +302,13 @@ export default class BattleSystem {
       this.tryToTakePlayerTurn();
       return;
     }
+
+    // If the pokemon died, skip their turn
+    if (!pokemon.alive) {
+      this.tryToTakePokemonTurn();
+      return;
+    }
+
     const action = pokemon.chooseAction(this.map, this.player, this.pokemonManager, this.astar);
     switch (action.type) {
       case ATTACK: {
@@ -346,16 +356,18 @@ export default class BattleSystem {
         const stopFrame = character.anims.currentAnim.frames[0];
         character.anims.stopOnFrame(stopFrame);
 
-        const hit = 10;
-        const damage = -hit;
-        const earnHealth = true;
+        const damage = this.meleeSystem.attack(character, target);
+        this.pokemonManager.doDamage(target, damage);
 
         // Damage numbers on target
-        new RisingNumbers(this.scene, target, damage);
+        new RisingNumbers(this.scene, target, -damage);
 
+        const earnHealth = character.enslaved;
         if (earnHealth) {
+          this.pokemonManager.healBall(damage);
+
           // Health numbers on pokeball
-          new RisingNumbers(this.scene, this.scene.pokeballButton, hit, true);
+          new RisingNumbers(this.scene, this.scene.pokeballButton, damage, true);
         }
 
         afterMove();
@@ -398,6 +410,9 @@ export default class BattleSystem {
       y: toTileWorld.y,
       duration: properties.turnDurationMillis,
       onComplete: () => {
+        // Set the character draw order
+        character.updateDepth();
+
         // Stop animation
         const stopFrame = character.anims.currentAnim.frames[0];
         character.anims.stopOnFrame(stopFrame);

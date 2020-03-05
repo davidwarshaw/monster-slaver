@@ -76,6 +76,9 @@ export default class GameScene extends Phaser.Scene {
       MapGenerationSystem.populateBackground(definition, this.mapLayers.background);
       MapGenerationSystem.populateCollision(definition, this.mapLayers.collision);
     }
+
+    this.mapLayers.background.depth = -2000;
+    this.mapLayers.collision.depth = -1000;
   }
 
   createForegroundLayer() {
@@ -86,5 +89,7 @@ export default class GameScene extends Phaser.Scene {
     else {
       this.mapLayers.foreground = this.map.createBlankDynamicLayer('foreground', this.tileset);
     }
+
+    this.mapLayers.foreground.depth = 0;
   }
 }
