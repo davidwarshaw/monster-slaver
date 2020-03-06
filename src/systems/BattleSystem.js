@@ -33,6 +33,8 @@ export default class BattleSystem {
     this.player = player;
     this.pokemonManager = pokemonManager;
 
+    this.dialogTiles = [];
+
     this.turnState = CHOOSE_ACTION;
     this.turnQueue = [];
 
@@ -276,7 +278,7 @@ export default class BattleSystem {
           this.tryToTakePokemonTurn();
         });
 
-        // If a move fails, kill the turn queue
+        // If a player move fails, kill the turn queue. Don't run the pokemon turns though
         if (!moveSucceeded) {
           this.turnQueue = [];
           this.turnState = CHOOSE_ACTION;
@@ -318,9 +320,14 @@ export default class BattleSystem {
         break;
       }
       case MOVE: {
-        this.characterMove(pokemon, action.to, () => {
+        const moveSucceeded = this.characterMove(pokemon, action.to, () => {
           this.tryToTakePokemonTurn();
         });
+
+        // If the move failed, take another pokemon turn
+        if (!moveSucceeded) {
+          this.tryToTakePokemonTurn();
+        }
         break;
       }
       case WAIT: {

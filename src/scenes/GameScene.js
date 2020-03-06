@@ -17,7 +17,7 @@ export default class GameScene extends Phaser.Scene {
   init(playState) {
     //this.playState = playState;
     this.playState = {
-      currentMap: 'woods-1'
+      currentMap: 'map-start'
     };
   }
 
@@ -80,6 +80,11 @@ export default class GameScene extends Phaser.Scene {
     this.mapLayers.background.depth = -2000;
     this.mapLayers.collision.depth = -1000;
   }
+
+  //
+  // createObjects() {
+  //   createFromObjects('objets', id, spriteConfig, this);
+  // }
 
   createForegroundLayer() {
     const definition = mapDefinitions[this.playState.currentMap];

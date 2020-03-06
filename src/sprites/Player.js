@@ -1,7 +1,7 @@
 import properties from '../properties';
 import TileMath from '../utils/TileMath';
 
-export default class Pokemon extends Phaser.GameObjects.Sprite {
+export default class Player extends Phaser.GameObjects.Sprite {
   constructor(scene, map, tile, male) {
     const spritesheetIndex = male ? 0 : 2;
 
