@@ -1,15 +1,33 @@
 {
   "map-start": {
-    "type": "static"
+    "type": "static",
+    "pokemonFrequency": 0.0,
+    "doors": [
+      { "from": { "x": 3, "y": 0 }, "to": { "x": 3, "y": 39 }, "map": "hedge-maze" },
+      { "from": { "x": 4, "y": 0 }, "to": { "x": 4, "y": 39 }, "map": "hedge-maze" }
+    ]
   },
-  "woods-1": {
+  "hedge-maze": {
     "type": "dynamic",
+    "pokemonFrequency": 0.1,
     "mapSizeTiles": {
       "width": 40,
       "height": 40
     },
-    "entrace": [{ "x": 3, "y": 39 }, { "x": 4, "y": 39 }],
-    "exit": [{ "x": 35, "y": 0 }, { "x": 34, "y": 0 }],
+    "doors": [
+      {
+        "from": { "x": 3, "y": 39 },
+        "to": { "x": 3, "y": 0 },
+        "map": "map-start",
+        "tileIndex": 40
+      },
+      {
+        "from": { "x": 4, "y": 39 },
+        "to": { "x": 4, "y": 0 },
+        "map": "map-start",
+        "tileIndex": 42
+      }
+    ],
     "tiles": {
       "background": {
         "base": [0, 1, 2, 3]

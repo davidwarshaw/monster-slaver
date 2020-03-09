@@ -19,7 +19,7 @@ export default class DialogWindows {
 
     const identified = this.pokemon.name in pokemonManager.identified;
 
-    this.capturable = (pokemon.health <= 10 || pokemon.enslaved) && pokemonManager.spaceInBall();
+    this.capturable = (pokemon.health <= 10 || pokemon.captured) && pokemonManager.spaceInBall();
 
     this.images = [];
 
@@ -51,7 +51,7 @@ export default class DialogWindows {
 
     offsetCenterY += 13;
     if (this.capturable) {
-      const label = pokemon.enslaved ? 'recall' : 'capture';
+      const label = pokemon.captured ? 'recall' : 'capture';
       this.images.push(this.font.render(centerX + this.offsetForText(label), offsetCenterY, label));
       this.images.push(scene.add.image(centerX, offsetCenterY + 4, 'select-frame'));
       this.images[this.images.length - 1].setVisible(false);

@@ -1,12 +1,12 @@
 {
   "Bulbasaur": {
-    "index": 1,
+    "index": 0,
     "type": "earth",
     "size": 1,
     "speed": 3
   },
   "Ivysaur": {
-    "index": 2,
+    "index": 1,
     "type": "earth",
     "size": 2,
     "speed": 2

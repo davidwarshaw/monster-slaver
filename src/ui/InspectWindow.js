@@ -19,7 +19,7 @@ export default class InspectWindow {
 
     const identified = this.pokemon.name in pokemonManager.identified;
 
-    this.capturable = (pokemon.health <= 10 || pokemon.enslaved) && pokemonManager.spaceInBall();
+    this.capturable = (pokemon.health <= 10 || pokemon.captured) && pokemonManager.spaceInBall();
 
     this.images = [];
 
@@ -31,7 +31,10 @@ export default class InspectWindow {
     );
 
     offsetCenterY += 22;
-    this.images.push(scene.add.image(centerX, offsetCenterY, 'pokemon', definition.index * 2 + 1));
+    const pokemonRowOffset = Math.trunc(definition.index / 15) * 120;
+    const pokemonColOffset = (definition.index % 15) * 2;
+    const pokemonSpriteIndex = pokemonRowOffset + pokemonColOffset + 1;
+    this.images.push(scene.add.image(centerX, offsetCenterY, 'pokemon', pokemonSpriteIndex));
 
     offsetCenterY += 13;
     const type = identified ? pokemon.definition.type.toString() : '???';
@@ -51,7 +54,7 @@ export default class InspectWindow {
 
     offsetCenterY += 13;
     if (this.capturable) {
-      const label = pokemon.enslaved ? 'recall' : 'capture';
+      const label = pokemon.captured ? 'recall' : 'capture';
       this.images.push(this.font.render(centerX + this.offsetForText(label), offsetCenterY, label));
       this.images.push(scene.add.image(centerX, offsetCenterY + 4, 'select-frame'));
       this.images[this.images.length - 1].setVisible(false);

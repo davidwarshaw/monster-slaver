@@ -1,6 +1,8 @@
 import properties from '../properties';
 import mapDefinitions from '../definitions/mapDefinitions';
 
+import TileMath from '../utils/TileMath';
+
 import MapGenerationSystem from '../systems/MapGenerationSystem';
 import BattleSystem from '../systems/BattleSystem';
 
@@ -15,22 +17,29 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init(playState) {
-    //this.playState = playState;
-    this.playState = {
-      currentMap: 'map-start'
-    };
+    this.playState = playState;
   }
 
   create() {
+    // Create the doors
+    this.createDoors();
+
     // Create the map
     this.createMap();
 
     // Background and Collision
     this.createBackgroundLayers();
 
-    // Sprites
-    this.pokemonManager = new PokemonManager(this, this.map);
-    this.player = new Player(this, this.map, { x: 4, y: 4 }, true);
+    const { identified, captured } = this.playState.pokemon;
+    this.pokemonManager = new PokemonManager(this, this.map, identified, captured);
+
+    // If we've captured all pokemon, we win the game
+    if (this.pokemonManager.allCaptured()) {
+      this.win();
+    }
+
+    const { x, y } = this.playState.mapStartingTile;
+    this.player = new Player(this, this.map, { x, y }, true);
 
     // Now foreground
     this.createForegroundLayer();
@@ -39,7 +48,15 @@ export default class GameScene extends Phaser.Scene {
     this.pokeballButton = new PokeballButton(this);
 
     // Create the systems
-    this.battleSystem = new BattleSystem(this, this.map, this.player, this.pokemonManager);
+    this.battleSystem = new BattleSystem(
+      this,
+      this.map,
+      this.player,
+      this.pokemonManager,
+      this.doors
+    );
+
+    this.createPokemon();
 
     // Camera
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -47,6 +64,15 @@ export default class GameScene extends Phaser.Scene {
 
     // Register the mouse listener
     this.input.on('pointerdown', pointer => this.battleSystem.pointerdown(pointer));
+  }
+
+  createDoors() {
+    const definition = mapDefinitions[this.playState.currentMap];
+    this.doors = {};
+    definition.doors.forEach(door => {
+      const doorkey = TileMath.keyFromPoint(door.from);
+      this.doors[doorkey] = door;
+    });
   }
 
   createMap() {
@@ -65,6 +91,7 @@ export default class GameScene extends Phaser.Scene {
 
   createBackgroundLayers() {
     const definition = mapDefinitions[this.playState.currentMap];
+    const { doors } = definition;
     if (definition.type === 'static') {
       this.mapLayers.background = this.map.createStaticLayer('background', this.tileset);
       this.mapLayers.collision = this.map.createStaticLayer('collision', this.tileset);
@@ -73,18 +100,13 @@ export default class GameScene extends Phaser.Scene {
       this.mapLayers.background = this.map.createBlankDynamicLayer('background', this.tileset);
       this.mapLayers.collision = this.map.createBlankDynamicLayer('collision', this.tileset);
 
-      MapGenerationSystem.populateBackground(definition, this.mapLayers.background);
-      MapGenerationSystem.populateCollision(definition, this.mapLayers.collision);
+      MapGenerationSystem.populateBackground(definition, this.mapLayers.background, doors);
+      MapGenerationSystem.populateCollision(definition, this.mapLayers.collision, doors);
     }
 
-    this.mapLayers.background.depth = -2000;
-    this.mapLayers.collision.depth = -1000;
+    this.mapLayers.background.depth = -5000;
+    this.mapLayers.collision.depth = -4000;
   }
-
-  //
-  // createObjects() {
-  //   createFromObjects('objets', id, spriteConfig, this);
-  // }
 
   createForegroundLayer() {
     const definition = mapDefinitions[this.playState.currentMap];
@@ -96,5 +118,56 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.mapLayers.foreground.depth = 0;
+  }
+
+  createPokemon() {
+    const { pokemonFrequency } = mapDefinitions[this.playState.currentMap];
+    const candidates = Object.entries(this.battleSystem.collisionMap)
+
+      // Only spawn on traversable tiles
+      .filter(e => !e[1])
+
+      // Decompose to x and y coords and sort randomly
+      .map(e => {
+        const key = e[0];
+        const x = parseInt(key.split('-')[0]);
+        const y = parseInt(key.split('-')[1]);
+        return { x, y, randomOrder: properties.rng.getUniform() };
+      })
+      .sort((l, r) => l.randomOrder - r.randomOrder);
+
+    console.log(`candidates.length: ${candidates.length} pokemonFrequency: ${pokemonFrequency}`);
+    const numberToCreate = candidates.length * pokemonFrequency;
+    const tiles = candidates.slice(0, numberToCreate);
+
+    this.pokemonManager.populatePokemon(tiles);
+  }
+
+  goToNewMap(nextMap, nextStartingTile) {
+    // New map data
+    this.playState.currentMap = nextMap;
+    this.playState.mapStartingTile = nextStartingTile;
+
+    // Pokemon data
+    this.playState.pokemon.identified = this.pokemonManager.identified;
+    this.playState.pokemon.captured = this.pokemonManager.getCapturedState();
+
+    this.scene.start('GameScene', this.playState);
+  }
+
+  gameOver() {
+    // Pokemon data
+    this.playState.pokemon.identified = this.pokemonManager.identified;
+    this.playState.pokemon.captured = this.pokemonManager.getCapturedState();
+
+    this.scene.start('GameOverScene', this.playState);
+  }
+
+  win() {
+    // Pokemon data
+    this.playState.pokemon.identified = this.pokemonManager.identified;
+    this.playState.pokemon.captured = this.pokemonManager.getCapturedState();
+
+    this.scene.start('WinScene', this.playState);
   }
 }

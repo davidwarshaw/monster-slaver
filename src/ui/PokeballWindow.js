@@ -36,7 +36,10 @@ export default class PokeballWindow {
       const entryY = centerY + offsetY + row * rowHeight;
       const definition = pokemonDefinitions[pokemon.name];
 
-      this.images.push(scene.add.image(entryX, entryY, 'pokemon', definition.index * 2 + 1));
+      const pokemonRowOffset = Math.trunc(definition.index / 15) * 120;
+      const pokemonColOffset = (definition.index % 15) * 2;
+      const pokemonSpriteIndex = pokemonRowOffset + pokemonColOffset + 1;
+      this.images.push(scene.add.image(entryX, entryY, 'pokemon', pokemonSpriteIndex));
 
       const healthString = `${pokemon.health}/${pokemon.maxHealth}`;
       this.images.push(this.font.render(entryX + 16, entryY - 4, healthString));

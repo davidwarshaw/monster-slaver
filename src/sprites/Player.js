@@ -82,7 +82,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
   }
 
   updateDepth() {
-    this.depth = this.y - 500;
+    this.depth = this.y - 1000;
   }
 
   isOnTile(tile) {

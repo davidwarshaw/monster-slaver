@@ -1,41 +1,29 @@
+import properties from '../properties';
+import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
+
 import Pokemon from '../sprites/Pokemon';
 
 export default class PokemonManager {
-  constructor(scene, map) {
+  constructor(scene, map, identified, captured) {
     this.scene = scene;
     this.map = map;
+    this.identified = identified;
 
-    this.identified = {};
-
-    this.pokemon = [];
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 5 }, 'Bulbasaur'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 6 }, 'Bulbasaur'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 7 }, 'Ivysaur'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 8 }, 'Venusaur'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 9 }, 'Charmander'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 10 }, 'Charmeleon'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 11 }, 'Charizard'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 12 }, 'Squirtle'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 13 }, 'Wartortle'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 5, y: 14 }, 'Blastoise'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 13 }, 'Caterpie'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 14 }, 'Metapod'));
-    this.pokemon.push(new Pokemon(this.scene, { x: 6, y: 15 }, 'Butterfree'));
-
-    this.pokemon.slice(1).forEach(p => this.enslave(p));
+    this.pokemon = captured.map(
+      captured => new Pokemon(scene, { x: 0, y: 0 }, captured.name, captured.health)
+    );
+    this.pokemon.forEach(p => p.capture());
 
     this.turnList = [];
   }
 
   startTurn() {
-    console.log(this.pokemon);
     this.turnList = this.pokemon
       .filter(p => p.alive && !p.inBall)
       .sort((l, r) => r.definition.speed - l.definition.speed);
   }
 
   getNextInTurn() {
-    console.log(this.turnList);
     return this.turnList.shift();
   }
 
@@ -58,9 +46,9 @@ export default class PokemonManager {
     return this.getPokemonByTile(tile) != null;
   }
 
-  enslave(pokemon) {
+  capture(pokemon) {
     this.identified[pokemon.name] = true;
-    pokemon.enslave();
+    pokemon.capture();
   }
 
   doDamage(pokemon, damage) {
@@ -73,5 +61,56 @@ export default class PokemonManager {
 
   spaceInBall() {
     return this.getPokemonInBall().length < 16;
+  }
+
+  allCaptured() {
+    const names = {};
+    this.getPokemonInBall().forEach(p => {
+      names[p.name] = true;
+    });
+    return Object.keys(names).length === 16;
+  }
+
+  getCapturedState() {
+    return this.getPokemonInBall().map(p => {
+      const { name, health } = p;
+      return { name, health };
+    });
+  }
+
+  populatePokemon(tiles) {
+    const spawns = PokemonManager.chooseStartingPokemon(tiles.length);
+    tiles.forEach((tile, i) => {
+      const spawn = spawns[i];
+      this.pokemon.push(new Pokemon(this.scene, tile, spawn.name));
+    });
+  }
+
+  static getPokemonBaseFrequency() {
+    const baseFrequency = {};
+    Object.entries(pokemonDefinitions)
+      .map(definition => {
+        const name = definition[0];
+        const { index, size, speed } = definition[1];
+        return { name, index, size, speed, randomOrder: properties.rng.getUniform() };
+      })
+      .sort((l, r) => l.randomOrder - r.randomOrder)
+      .slice(0, 16)
+      .forEach(definition => {
+        const { name, size, speed } = definition;
+        baseFrequency[name] = 7 - size + speed;
+      });
+
+    return baseFrequency;
+  }
+
+  static chooseStartingPokemon(number) {
+    const baseFrequency = this.getPokemonBaseFrequency();
+    const starting = [...Array(number).keys()].map(() => {
+      const name = properties.rng.getWeightedValue(baseFrequency);
+      const health = pokemonDefinitions[name].maxHealth;
+      return { name, health };
+    });
+    return starting;
   }
 }

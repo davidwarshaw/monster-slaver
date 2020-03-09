@@ -10,10 +10,11 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('select-frame', 'assets/images/select_frame.png');
     this.load.image('window-small', 'assets/images/window_small.png');
     this.load.image('window-big', 'assets/images/window_big.png');
+    this.load.image('window-intro', 'assets/images/window_intro.png');
 
     // Maps
     this.load.image('map-tiles', 'assets/maps/tileset-advanced.png');
-    this.load.tilemapTiledJSON('map-start', 'assets/maps/start.json');
+    this.load.tilemapTiledJSON('map-start', 'assets/maps/map-start.json');
 
     // Sprites
     this.load.spritesheet('pokeball-small', 'assets/images/pokeball_small.png', {
@@ -39,6 +40,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameScene');
+    this.scene.start('TitleScene');
   }
 }

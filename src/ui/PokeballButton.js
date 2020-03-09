@@ -15,12 +15,15 @@ export default class PokeballButton extends Phaser.GameObjects.Sprite {
   }
 
   showPreview(pokemon) {
-    const spritesheetIndex = pokemonDefinitions[pokemon.name].index * 2 + 1;
+    const definition = pokemonDefinitions[pokemon.name];
+    const pokemonRowOffset = Math.trunc(definition.index / 15) * 120;
+    const pokemonColOffset = (definition.index % 15) * 2;
+    const pokemonSpriteIndex = pokemonRowOffset + pokemonColOffset + 1;
     this.pokemonPreview = this.scene.add.image(
       30 + 8,
       properties.height - 30 - 8,
       'pokemon',
-      spritesheetIndex
+      pokemonSpriteIndex
     );
   }
 

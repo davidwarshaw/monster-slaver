@@ -1,6 +1,7 @@
 import properties from '../properties';
-import TileMath from '../utils/TileMath';
 import pokemonDefinitions from '../definitions/pokemonDefinitions.json';
+
+import TileMath from '../utils/TileMath';
 
 // Turn Types
 const ATTACK = 'ATTACK';
@@ -8,7 +9,7 @@ const MOVE = 'MOVE';
 const WAIT = 'WAIT';
 
 export default class Pokemon extends Phaser.GameObjects.Sprite {
-  constructor(scene, tile, name) {
+  constructor(scene, tile, name, health) {
     const spritesheetIndex = pokemonDefinitions[name].index * 2;
 
     super(scene, 100, 100, 'pokemon', spritesheetIndex);
@@ -19,7 +20,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
     this.name = name;
     this.alive = true;
-    this.enslaved = false;
+    this.captured = false;
     this.inBall = false;
     this.definition = pokemonDefinitions[name];
 
@@ -27,7 +28,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       40 + this.definition.size * 20 * properties.rng.getUniform(),
       1
     );
-    this.health = this.maxHealth;
+    this.health = health || this.maxHealth;
 
     scene.add.existing(this);
 
@@ -86,11 +87,21 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
   }
 
   frameFromRowCol(index, row, col) {
-    return index + col + row * 30;
+    const pokemonIndex = index / 2;
+    const pokemonRowOffset = Math.trunc(pokemonIndex / 15) * 120;
+    const pokemonColOffset = (pokemonIndex % 15) * 2;
+    const frameRowOffset = row * 30;
+    const frameColOffset = col;
+    const frame = pokemonRowOffset + pokemonColOffset + frameRowOffset + frameColOffset;
+
+    // console.log(`name: ${this.name} index: ${index}`);
+    // console.log(`pokemonRowOffset: ${pokemonRowOffset} pokemonColOffset: ${pokemonColOffset}`);
+    // console.log(`frameRowOffset: ${frameRowOffset} frameColOffset: ${frameColOffset}`);
+    return frame;
   }
 
   updateDepth() {
-    this.depth = this.y - 500;
+    this.depth = this.y - 1000;
   }
 
   doDamage(damage) {
@@ -98,19 +109,21 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     if (this.health <= 0) {
       this.alive = false;
       this.anims.play(`${this.name}_dead`);
-      this.depth = -900;
+      this.depth = -3000;
     }
   }
 
   heal(health) {
+    console.log(`health ${health} this.health: ${this.health} this.maxHealth: ${this.maxHealth}`);
     this.health += health;
     if (this.health > this.maxHealth) {
-      this.alive = this.maxHealth;
+      this.health = this.maxHealth;
     }
   }
 
-  enslave() {
-    this.enslaved = true;
+  capture() {
+    this.scale = 1;
+    this.captured = true;
     this.inBall = true;
     this.setActive(false);
     this.setVisible(false);
@@ -127,6 +140,22 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
 
   chooseAction(map, player, pokemonManager, astar) {
     const { x, y } = map.worldToTileXY(this.x, this.y);
+    const playerTile = map.worldToTileXY(player.x, player.y);
+
+    // Wild pokemon try to attack the player
+    if (!this.captured) {
+      const playerAttackable = [
+        { x, y: y - 1 },
+        { x: x + 1, y },
+        { x, y: y + 1 },
+        { x: x - 1, y }
+      ].filter(location => location.x === playerTile.x && location.y === playerTile.y);
+      console.log('playerAttackable:');
+      console.log(playerAttackable);
+      if (playerAttackable.length > 0) {
+        return { type: ATTACK, target: player };
+      }
+    }
 
     // Check for pokemon to attack, start at north then go clockwise
     const attackCandidates = [
@@ -136,7 +165,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       pokemonManager.getPokemonByTile({ x: x - 1, y })
     ]
       .filter(candidate => candidate)
-      .filter(candidate => candidate.enslaved !== this.enslaved);
+      .filter(candidate => candidate.captured !== this.captured);
 
     console.log('attackCandidates:');
     console.log(attackCandidates);
@@ -144,7 +173,6 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       return { type: ATTACK, target: attackCandidates[0] };
     }
 
-    const playerTile = map.worldToTileXY(player.x, player.y);
     const pathToPlayer = astar.findPath({ x, y }, playerTile);
     console.log('pathToPlayer:');
     console.log(pathToPlayer);

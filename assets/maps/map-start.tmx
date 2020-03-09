@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="20" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="20" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
  <editorsettings>
-  <export target="start..json" format="json"/>
+  <export format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="tileset-advanced" tilewidth="16" tileheight="16" tilecount="592" columns="8">
   <image source="tileset-advanced.png" width="128" height="1184"/>
  </tileset>
- <layer id="1" name="background" width="20" height="13">
+ <layer id="1" name="background" width="20" height="13" visible="0">
   <data encoding="csv">
 1,3,1,49,51,1,1,2,1,3,1,2,1,1,1,1,1,2,1,1,
 2,1,1,49,51,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -28,9 +28,9 @@
 6,13,14,0,0,21,22,21,22,21,22,21,22,21,22,21,22,13,14,5,
 14,5,6,0,0,29,0,0,0,0,0,0,0,0,9,9,220,5,6,13,
 6,13,14,0,0,0,0,0,0,0,0,0,0,0,0,9,209,13,14,5,
-14,5,6,0,0,0,473,474,475,476,474,474,447,448,0,0,209,5,6,13,
-6,13,14,0,0,0,481,482,482,482,482,482,455,456,0,0,209,13,14,5,
-14,5,6,0,0,0,489,490,490,490,490,490,463,464,0,0,209,5,6,13,
+14,5,6,0,0,0,473,474,475,474,455,455,455,448,0,0,209,5,6,13,
+6,13,14,0,0,0,481,482,482,482,455,455,455,456,0,0,209,13,14,5,
+14,5,6,0,0,0,489,490,490,490,463,463,463,464,0,0,209,5,6,13,
 6,13,14,0,0,0,497,498,498,498,498,498,471,472,0,0,209,13,14,5,
 14,5,6,0,0,0,505,506,507,395,395,478,479,480,0,0,209,5,6,13,
 6,13,14,0,0,0,0,0,0,0,0,0,0,0,0,0,209,13,14,5,
@@ -40,11 +40,11 @@
 22,13,14,213,213,213,213,213,213,213,213,213,213,213,213,213,217,13,14,5
 </data>
  </layer>
- <layer id="3" name="foreground" width="20" height="13">
+ <layer id="3" name="foreground" width="20" height="13" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,465,466,467,468,439,438,439,440,0,0,0,0,0,0,
+0,0,0,0,0,0,465,466,467,467,439,438,439,440,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

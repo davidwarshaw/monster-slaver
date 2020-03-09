@@ -17,8 +17,8 @@ export default {
   attackMillis: 100,
   numberMillis: 1200,
   animFrameRate: 10,
-  turnDelayMillis: 1000,
-  turnDurationMillis: 300,
+  turnDelayMillis: 600,
+  turnDurationMillis: 200,
   uiFlashTint: 0x000000,
   uiHangMillis: 100
 };
