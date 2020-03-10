@@ -8,6 +8,9 @@ const ATTACK = 'ATTACK';
 const MOVE = 'MOVE';
 const WAIT = 'WAIT';
 
+// AI
+const IGNORE_DISTANCE = 8;
+
 export default class Pokemon extends Phaser.GameObjects.Sprite {
   constructor(scene, tile, name, health) {
     const spritesheetIndex = pokemonDefinitions[name].index * 2;
@@ -173,12 +176,16 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       return { type: ATTACK, target: attackCandidates[0] };
     }
 
-    const pathToPlayer = astar.findPath({ x, y }, playerTile);
-    console.log('pathToPlayer:');
-    console.log(pathToPlayer);
-    if (pathToPlayer.length > 2) {
-      const nextTile = pathToPlayer[1];
-      return { type: MOVE, to: nextTile };
+    // If the player is close, move towards them
+    const distanceToPlayer = TileMath.distance({ x, y }, playerTile);
+    if (distanceToPlayer <= IGNORE_DISTANCE) {
+      const pathToPlayer = astar.findPath({ x, y }, playerTile);
+      console.log('pathToPlayer:');
+      console.log(pathToPlayer);
+      if (pathToPlayer.length > 2) {
+        const nextTile = pathToPlayer[1];
+        return { type: MOVE, to: nextTile };
+      }
     }
 
     return { type: WAIT };

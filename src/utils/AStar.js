@@ -8,10 +8,9 @@ export default class AStar {
   }
 
   addNeighbor(neighbors, x, y) {
-    // Don't stop astar at pokemon
-    // if (this.pokeManager.someOnTile({ x, y }) > 0) {
-    //   return;
-    // }
+    if (this.pokeManager.someOnTile({ x, y }) > 0) {
+      return;
+    }
 
     const collision = this.map[TileMath.keyFromXY(x, y)];
     if (collision) {

@@ -127,11 +127,19 @@ export default class GameScene extends Phaser.Scene {
       // Only spawn on traversable tiles
       .filter(e => !e[1])
 
+      // Don't spawn near doors
+      .filter(e => {
+        const candidatePoint = TileMath.pointFromKey(e[0]);
+        const someCloseDoors = Object.keys(this.doors).some(doorKey => {
+          const doorPoint = TileMath.pointFromKey(doorKey);
+          return TileMath.distance(candidatePoint, doorPoint) <= 8;
+        });
+        return !someCloseDoors;
+      })
+
       // Decompose to x and y coords and sort randomly
       .map(e => {
-        const key = e[0];
-        const x = parseInt(key.split('-')[0]);
-        const y = parseInt(key.split('-')[1]);
+        const { x, y } = TileMath.pointFromKey(e[0]);
         return { x, y, randomOrder: properties.rng.getUniform() };
       })
       .sort((l, r) => l.randomOrder - r.randomOrder);

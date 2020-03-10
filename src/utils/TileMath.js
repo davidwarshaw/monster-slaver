@@ -101,6 +101,13 @@ function keyFromPoint(point) {
   return `${point.x}-${point.y}`;
 }
 
+function pointFromKey(key) {
+  console.log(`key: ${key}`);
+  const x = parseInt(key.split('-')[0]);
+  const y = parseInt(key.split('-')[1]);
+  return { x, y };
+}
+
 function animationKeyFromMove(character, from, to) {
   const left = from.x - to.x > 0;
   const right = from.x - to.x < 0;
@@ -141,6 +148,7 @@ export default {
   distance,
   keyFromXY,
   keyFromPoint,
+  pointFromKey,
   animationKeyFromMove,
   collisionMapFromTileMap
 };

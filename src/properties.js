@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js';
 
-ROT.RNG.setSeed(1);
+ROT.RNG.setSeed(Date.now());
 
 export default {
   debug: true,
