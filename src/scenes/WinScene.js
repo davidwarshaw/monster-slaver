@@ -12,7 +12,7 @@ export default class WinScene extends Phaser.Scene {
   }
 
   create() {
-    console.log(this.playState);
+  // console.log(this.playState);
     this.font = new Font(this);
 
     this.images = [];

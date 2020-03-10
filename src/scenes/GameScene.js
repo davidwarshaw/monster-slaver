@@ -144,7 +144,7 @@ export default class GameScene extends Phaser.Scene {
       })
       .sort((l, r) => l.randomOrder - r.randomOrder);
 
-    console.log(`candidates.length: ${candidates.length} pokemonFrequency: ${pokemonFrequency}`);
+    // console.log(`candidates.length: ${candidates.length} pokemonFrequency: ${pokemonFrequency}`);
     const numberToCreate = candidates.length * pokemonFrequency;
     const tiles = candidates.slice(0, numberToCreate);
 

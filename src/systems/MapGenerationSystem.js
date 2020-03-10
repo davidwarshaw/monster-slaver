@@ -114,7 +114,7 @@ function populateCollision(definition, layer, doors) {
       firstPass[y][x] = tile;
       const floorNeighbors = neighborCount(baseMap, x, y, ['floor']);
       if (floorNeighbors === 0) {
-        console.log(`floorNeighbors: ${floorNeighbors}`);
+        // console.log(`floorNeighbors: ${floorNeighbors}`);
         firstPass[y][x] = 'fill';
       }
     });

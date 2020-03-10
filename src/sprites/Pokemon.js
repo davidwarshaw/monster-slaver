@@ -117,7 +117,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
   }
 
   heal(health) {
-    console.log(`health ${health} this.health: ${this.health} this.maxHealth: ${this.maxHealth}`);
+    // console.log(`health ${health} this.health: ${this.health} this.maxHealth: ${this.maxHealth}`);
     this.health += health;
     if (this.health > this.maxHealth) {
       this.health = this.maxHealth;
@@ -153,8 +153,9 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
         { x, y: y + 1 },
         { x: x - 1, y }
       ].filter(location => location.x === playerTile.x && location.y === playerTile.y);
-      console.log('playerAttackable:');
-      console.log(playerAttackable);
+
+      // console.log('playerAttackable:');
+      // console.log(playerAttackable);
       if (playerAttackable.length > 0) {
         return { type: ATTACK, target: player };
       }
@@ -170,8 +171,8 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       .filter(candidate => candidate)
       .filter(candidate => candidate.captured !== this.captured);
 
-    console.log('attackCandidates:');
-    console.log(attackCandidates);
+    // console.log('attackCandidates:');
+    // console.log(attackCandidates);
     if (attackCandidates.length > 0) {
       return { type: ATTACK, target: attackCandidates[0] };
     }
@@ -180,8 +181,9 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
     const distanceToPlayer = TileMath.distance({ x, y }, playerTile);
     if (distanceToPlayer <= IGNORE_DISTANCE) {
       const pathToPlayer = astar.findPath({ x, y }, playerTile);
-      console.log('pathToPlayer:');
-      console.log(pathToPlayer);
+
+      // console.log('pathToPlayer:');
+      // console.log(pathToPlayer);
       if (pathToPlayer.length > 2) {
         const nextTile = pathToPlayer[1];
         return { type: MOVE, to: nextTile };

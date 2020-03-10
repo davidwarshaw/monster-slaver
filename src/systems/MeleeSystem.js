@@ -22,9 +22,9 @@ export default class MeleeSystem {
       this.typeDefinition[type] = {};
       this.typeDefinition[type].weakAgainst = this.weaknesses[i];
       this.typeDefinition[type].strongAgainst = this.strengths[i];
-      console.log(`Type:           ${type}`);
-      console.log(`Weak against:   ${this.typeDefinition[type].weakAgainst}`);
-      console.log(`Strong against: ${this.typeDefinition[type].strongAgainst}`);
+    // console.log(`Type:           ${type}`);
+    // console.log(`Weak against:   ${this.typeDefinition[type].weakAgainst}`);
+    // console.log(`Strong against: ${this.typeDefinition[type].strongAgainst}`);
     });
   }
 

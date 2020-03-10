@@ -72,7 +72,7 @@ export default class DialogWindows {
       point.x,
       point.y
     );
-    console.log(`buttonHit: ${buttonHit}`);
+  // console.log(`buttonHit: ${buttonHit}`);
     if (!buttonHit) {
       return null;
     }
@@ -85,7 +85,7 @@ export default class DialogWindows {
   }
 
   destroy() {
-    console.log('DialogWindows: destroy');
+  // console.log('DialogWindows: destroy');
     this.images.forEach(image => image.destroy());
   }
 }

@@ -59,8 +59,8 @@ export default class PokeballWindow {
   }
 
   selectPokemon(point) {
-    console.log('selectPokemon:');
-    console.log(`point: ${point.x}, ${point.y}`);
+  // console.log('selectPokemon:');
+  // console.log(`point: ${point.x}, ${point.y}`);
     const rects = this.targetRects.filter(targetRect => {
       return Phaser.Geom.Rectangle.Contains(targetRect.rect.getBounds(), point.x, point.y);
     });
@@ -79,7 +79,7 @@ export default class PokeballWindow {
   }
 
   destroy() {
-    console.log('PokeballWindow: destroy');
+  // console.log('PokeballWindow: destroy');
     this.targetRects.forEach(rect => rect.rect.destroy());
     this.images.forEach(image => image.destroy());
   }

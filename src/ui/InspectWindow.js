@@ -75,7 +75,7 @@ export default class InspectWindow {
       point.x,
       point.y
     );
-    console.log(`buttonHit: ${buttonHit}`);
+  // console.log(`buttonHit: ${buttonHit}`);
     if (!buttonHit) {
       return null;
     }
@@ -88,7 +88,7 @@ export default class InspectWindow {
   }
 
   destroy() {
-    console.log('InspectWindow: destroy');
+  // console.log('InspectWindow: destroy');
     this.images.forEach(image => image.destroy());
   }
 }

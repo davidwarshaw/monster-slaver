@@ -102,7 +102,7 @@ function keyFromPoint(point) {
 }
 
 function pointFromKey(key) {
-  console.log(`key: ${key}`);
+  // console.log(`key: ${key}`);
   const x = parseInt(key.split('-')[0]);
   const y = parseInt(key.split('-')[1]);
   return { x, y };
