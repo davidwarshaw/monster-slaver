@@ -144,6 +144,7 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
   chooseAction(map, player, pokemonManager, astar) {
     const { x, y } = map.worldToTileXY(this.x, this.y);
     const playerTile = map.worldToTileXY(player.x, player.y);
+    const distanceToPlayer = TileMath.distance({ x, y }, playerTile);
 
     // Wild pokemon try to attack the player
     if (!this.captured) {
@@ -158,6 +159,18 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       // console.log(playerAttackable);
       if (playerAttackable.length > 0) {
         return { type: ATTACK, target: player };
+      }
+    }
+
+    // If the player is close to a wild pokemon, move towards them
+    if (!this.captured && distanceToPlayer <= IGNORE_DISTANCE) {
+      const pathToPlayer = astar.findPath({ x, y }, playerTile);
+
+      // console.log('pathToPlayer:');
+      // console.log(pathToPlayer);
+      if (pathToPlayer.length > 2) {
+        const nextTile = pathToPlayer[1];
+        return { type: MOVE, to: nextTile };
       }
     }
 
@@ -177,9 +190,8 @@ export default class Pokemon extends Phaser.GameObjects.Sprite {
       return { type: ATTACK, target: attackCandidates[0] };
     }
 
-    // If the player is close, move towards them
-    const distanceToPlayer = TileMath.distance({ x, y }, playerTile);
-    if (distanceToPlayer <= IGNORE_DISTANCE) {
+    // If the player is close to a tame pokemon, move towards them
+    if (this.captured) {
       const pathToPlayer = astar.findPath({ x, y }, playerTile);
 
       // console.log('pathToPlayer:');

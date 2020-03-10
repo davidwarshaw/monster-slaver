@@ -12,7 +12,7 @@ export default class PokemonManager {
     this.pokemon = captured.map(
       captured => new Pokemon(scene, { x: 0, y: 0 }, captured.name, captured.health)
     );
-    this.pokemon.forEach(p => p.capture());
+    this.pokemon.forEach(p => this.capture(p));
 
     this.turnList = [];
   }

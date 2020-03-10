@@ -46,7 +46,8 @@ export default class BattleSystem {
 
   playerPathTo(toTile) {
     const playerTile = this.map.worldToTileXY(this.player.x, this.player.y);
-  // console.log(`playerTile: ${playerTile.x}, ${playerTile.y}`);
+
+    // console.log(`playerTile: ${playerTile.x}, ${playerTile.y}`);
     const astar = new AStar(this.collisionMap, this.player, this.pokemonManager);
     const path = astar.findPath(playerTile, toTile);
     return path;
@@ -64,13 +65,13 @@ export default class BattleSystem {
       return turn;
     });
 
-  // console.log('turnQueue:');
-  // console.log(this.turnQueue);
+    // console.log('turnQueue:');
+    // console.log(this.turnQueue);
   }
 
   pointerdown(pointer) {
-  // console.log('\nPointer Down:');
-  // console.log(`turnState: ${this.turnState}`);
+    // console.log('\nPointer Down:');
+    // console.log(`turnState: ${this.turnState}`);
     switch (this.turnState) {
 
       // case TAKING_TURNS: {
@@ -136,7 +137,7 @@ export default class BattleSystem {
             });
             this.selectedPokemon.iChooseYou(toTile);
 
-          // console.log('pokemonManager.startTurn:');
+            // console.log('pokemonManager.startTurn:');
             this.changeTurnState(TAKING_TURNS);
             this.pokemonManager.startTurn();
             this.tryToTakePokemonTurn();
@@ -153,8 +154,8 @@ export default class BattleSystem {
 
         // If we selected a pokemon, throw it
         if (selectedPokemon) {
-        // console.log('selectedPokemon:');
-        // console.log(selectedPokemon);
+          // console.log('selectedPokemon:');
+          // console.log(selectedPokemon);
           this.selectedPokemon = selectedPokemon;
           this.changeTurnState(POKEBALL_CHOOSE_WAIT);
 
@@ -196,10 +197,10 @@ export default class BattleSystem {
                 const pokeball = new Pokeball(this.scene, pokemon);
                 pokeball.play('pokeball_open', false);
                 pokeball.once('animationcomplete', () => {
-                  pokemon.capture();
+                  this.pokemonManager.capture(pokemon);
                   pokeball.destroy();
 
-                // console.log('pokemonManager.startTurn:');
+                  // console.log('pokemonManager.startTurn:');
                   this.changeTurnState(TAKING_TURNS);
                   this.pokemonManager.startTurn();
                   this.tryToTakePokemonTurn();
@@ -220,20 +221,21 @@ export default class BattleSystem {
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
         const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
         const world = this.map.tileToWorldXY(toTile.x, toTile.y);
-      // console.log(`pointer: ${pointer.x}, ${pointer.y}`);
-      // console.log(`toTile: ${toTile.x}, ${toTile.y}`);
-      // console.log(`world: ${world.x}, ${world.y}`);
+
+        // console.log(`pointer: ${pointer.x}, ${pointer.y}`);
+        // console.log(`toTile: ${toTile.x}, ${toTile.y}`);
+        // console.log(`world: ${world.x}, ${world.y}`);
 
         // Check button against screen point
         if (this.scene.pokeballButton.selectButton(pointer)) {
-        // console.log('Click on pokeball button');
+          // console.log('Click on pokeball button');
           this.pokeballWindow = new PokeballWindow(this.scene, this.pokemonManager);
           this.changeTurnState(POKEBALL_CHOOSE);
           break;
         }
 
         if (this.player.isOnTile(toTile)) {
-        // console.log('Click on player');
+          // console.log('Click on player');
           this.turnQueue = [{ character: this.player, type: WAIT }];
           this.changeTurnState(TAKING_TURNS);
           this.tryToTakePlayerTurn();
@@ -242,20 +244,21 @@ export default class BattleSystem {
 
         const pokemonTo = this.pokemonManager.getPokemonByTile(toTile);
         if (pokemonTo) {
-        // console.log('Click on pokemon');
+          // console.log('Click on pokemon');
           this.inspectWindow = new InspectWindow(this.scene, pokemonTo, this.pokemonManager);
           this.changeTurnState(INSPECT);
           break;
         }
 
         const collisionMapTile = this.collisionMap[TileMath.keyFromPoint(toTile)];
-      // console.log(`collisionMap: ${collisionMapTile}`);
+
+        // console.log(`collisionMap: ${collisionMapTile}`);
         if (collisionMapTile) {
-        // console.log('Tile is not traversable');
+          // console.log('Tile is not traversable');
           break;
         }
 
-      // console.log('Tile is traversable: filling turn queue with path');
+        // console.log('Tile is traversable: filling turn queue with path');
         this.changeTurnState(TAKING_TURNS);
         this.fillTurnQueueWithPath(this.playerPathTo(toTile));
         this.tryToTakePlayerTurn();
@@ -266,21 +269,22 @@ export default class BattleSystem {
 
   tryToTakePlayerTurn() {
     // Left pop turn from the queue
-  // console.log('tryToTakePlayerTurn:');
+    // console.log('tryToTakePlayerTurn:');
     const turn = this.turnQueue.shift();
     if (!turn) {
-    // console.log('No more turns: CHOOSE_ACTION');
+      // console.log('No more turns: CHOOSE_ACTION');
       this.changeTurnState(CHOOSE_ACTION);
       return;
     }
-  // console.log('Turn found: TAKING_TURNS');
-  // console.log(turn);
+
+    // console.log('Turn found: TAKING_TURNS');
+    // console.log(turn);
     switch (turn.type) {
 
       // Player cannot attack
       case MOVE: {
         const moveSucceeded = this.characterMove(this.player, turn.to, () => {
-        // console.log('pokemonManager.startTurn:');
+          // console.log('pokemonManager.startTurn:');
           this.changeTurnState(TAKING_TURNS);
           this.pokemonManager.startTurn();
           this.tryToTakePokemonTurn();
@@ -294,7 +298,7 @@ export default class BattleSystem {
         break;
       }
       case WAIT: {
-      // console.log('pokemonManager.startTurn:');
+        // console.log('pokemonManager.startTurn:');
         this.changeTurnState(TAKING_TURNS);
         this.pokemonManager.startTurn();
         this.tryToTakePokemonTurn();
@@ -304,7 +308,7 @@ export default class BattleSystem {
   }
 
   tryToTakePokemonTurn() {
-  // console.log('tryToTakePokemonTurn:');
+    // console.log('tryToTakePokemonTurn:');
     const pokemon = this.pokemonManager.getNextInTurn();
 
     // If there are no more pokemon, the turn is over
@@ -346,7 +350,7 @@ export default class BattleSystem {
   }
 
   characterAttack(character, target, afterMove) {
-  // console.log(`character: ${character.name} target: ${target.name}`);
+    // console.log(`character: ${character.name} target: ${target.name}`);
 
     // From is the characters current location, to is the targets
     const from = this.map.worldToTileXY(character.x, character.y);
@@ -398,7 +402,7 @@ export default class BattleSystem {
   }
 
   characterMove(character, to, afterMove) {
-  // console.log(`character: ${character.name} to: ${to.x}, ${to.y}`);
+    // console.log(`character: ${character.name} to: ${to.x}, ${to.y}`);
 
     // From is the characters current location
     const from = this.map.worldToTileXY(character.x, character.y);
@@ -416,11 +420,11 @@ export default class BattleSystem {
     // If the to tile is occupied, don't move there
     const pokemonTo = this.pokemonManager.getPokemonByTile(to);
     if (pokemonTo) {
-    // console.log(`Move cancelled. Tile occupied: ${pokemonTo.name}`);
+      // console.log(`Move cancelled. Tile occupied: ${pokemonTo.name}`);
       return false;
     }
     if (this.player.isOnTile(to)) {
-    // console.log('Move cancelled. Tile occupied by player');
+      // console.log('Move cancelled. Tile occupied by player');
       return false;
     }
 
@@ -456,7 +460,7 @@ export default class BattleSystem {
   }
 
   changeTurnState(newState) {
-  // console.log(`changing turn state from: ${this.turnState} to: ${newState}`);
+    // console.log(`changing turn state from: ${this.turnState} to: ${newState}`);
     this.turnState = newState;
   }
 }
