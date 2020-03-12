@@ -81,6 +81,7 @@ export default class BattleSystem {
       //   break;
       // }
       case POKEBALL_THROW: {
+        // console.log('Click with: POKEBALL_THROW');
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
         const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
         const world = this.map.tileToWorldXY(toTile.x, toTile.y);
@@ -149,6 +150,7 @@ export default class BattleSystem {
         break;
       }
       case POKEBALL_CHOOSE: {
+        // console.log('Click with: POKEBALL_CHOOSE');
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
         const selectedPokemon = this.pokeballWindow.selectPokemon(worldPoint);
 
@@ -176,6 +178,7 @@ export default class BattleSystem {
         break;
       }
       case INSPECT: {
+        // console.log('Click with: INSPECT');
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
         const pokemon = this.inspectWindow.selectButton(worldPoint);
         if (pokemon) {
@@ -218,6 +221,7 @@ export default class BattleSystem {
         break;
       }
       case CHOOSE_ACTION: {
+        // console.log('Click with: CHOOSE_ACTION');
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
         const toTile = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
         const world = this.map.tileToWorldXY(toTile.x, toTile.y);
@@ -297,7 +301,9 @@ export default class BattleSystem {
         }
         break;
       }
-      case WAIT: {
+
+      //case WAIT: {
+      default: {
         // console.log('pokemonManager.startTurn:');
         this.changeTurnState(TAKING_TURNS);
         this.pokemonManager.startTurn();
@@ -324,6 +330,9 @@ export default class BattleSystem {
     }
 
     const action = pokemon.chooseAction(this.map, this.player, this.pokemonManager, this.astar);
+
+    // console.log(pokemon.name);
+    // console.log(action);
     switch (action.type) {
       case ATTACK: {
         this.characterAttack(pokemon, action.target, () => {
@@ -342,7 +351,9 @@ export default class BattleSystem {
         }
         break;
       }
-      case WAIT: {
+
+      //case WAIT: {
+      default: {
         this.tryToTakePokemonTurn();
         break;
       }

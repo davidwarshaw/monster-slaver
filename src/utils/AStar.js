@@ -1,4 +1,5 @@
 import TileMath from './TileMath';
+const CIRCUIT_BREAKER = 500;
 
 export default class AStar {
   constructor(map, player, pokeManager) {
@@ -60,6 +61,7 @@ export default class AStar {
   }
 
   findPath(from, to) {
+    let circuitCount = 0;
     const openSet = [];
     const closedSet = {};
 
@@ -90,6 +92,12 @@ export default class AStar {
           continue;
         }
         this.addToOpenSet(openSet, to, neighbor, current);
+      }
+
+      circuitCount++;
+      if (circuitCount >= CIRCUIT_BREAKER) {
+        console.log('AStar CIRCUIT_BREAKER tripped.');
+        return [];
       }
     }
 
